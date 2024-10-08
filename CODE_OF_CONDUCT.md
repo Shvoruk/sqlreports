@@ -1,4 +1,4 @@
-# Contributor Covenant Code of Conduct
+#  Group 9's Code of Conduct
 
 ## Our Pledge
 

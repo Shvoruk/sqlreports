@@ -13,8 +13,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Compile with Maven
-        run: mvn compile
+      - name: build with Maven
+        run: mvn clean package
       - name: Build Docker Image
         run: docker build -t sqlreportsimage .
       - name: Run image

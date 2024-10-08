@@ -1,0 +1,2 @@
+* License [![LICENSE](https://img.shields.io/github/license/Shvoruk/reports.group9.svg?style=flat-square)](https://github.com/Shvoruk/sqlreports/blob/master/LICENSE)
+* Release [![Releases](https://img.shields.io/github/release/Shvoruk/reports.group9/all.svg?style=flat-square)](https://github.com/Shvoruk/sqlreports/releases)]

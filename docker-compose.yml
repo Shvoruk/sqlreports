@@ -1,0 +1,18 @@
+version: '3'
+services:
+  app:
+    build: .
+    container_name: sqlreportscontainer
+    depends_on:
+      - db
+    networks:
+      - sqlreports-network
+
+  db:
+    build: db/.
+    container_name: world_db
+    networks:
+      - sqlreports-network
+networks:
+  sqlreports-network:
+    driver: bridge

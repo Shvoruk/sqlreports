@@ -16,4 +16,4 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
       - name: Run docker compose
-        run: docker compose up 
+        run: docker compose up -d

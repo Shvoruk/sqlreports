@@ -2,17 +2,23 @@ version: '3'
 services:
   app:
     build: .
-    container_name: sqlreportscontainer
+    container_name: sql_reports
+    ports:
+      - "8080:8080"
     depends_on:
       - db
     networks:
-      - sqlreports-network
+      - custom_network
 
   db:
     build: db/.
     container_name: world_db
+    ports:
+      - "3306:3306"
     networks:
-      - sqlreports-network
+      - custom_network
+
 networks:
-  sqlreports-network:
+  custom_network:
     driver: bridge
+

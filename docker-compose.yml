@@ -3,6 +3,8 @@ services:
   app:
     build: .
     container_name: sqlreportscontainer
+    ports:
+      - 8080:8080
     depends_on:
       - db
     networks:

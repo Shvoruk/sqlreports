@@ -13,6 +13,13 @@ services:
   db:
     build: db/.
     container_name: world_db
+    environment:
+      MYSQL_DATABASE: world
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/world.sql:/docker-entrypoint-initdb.d/world.sql
     networks:
       - sqlreports-network
 networks:

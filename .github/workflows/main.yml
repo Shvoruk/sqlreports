@@ -22,10 +22,11 @@ jobs:
   
         - name: Wait 
           run: |
-              sleep 100
+              sleep 60
   
         - name: Run Unit Tests
           env:
+            MYSQL_ROOT_PASSWORD: rootpassword
             SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/world
             SPRING_DATASOURCE_USERNAME: user
             SPRING_DATASOURCE_PASSWORD: password

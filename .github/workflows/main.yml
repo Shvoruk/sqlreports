@@ -17,15 +17,12 @@ jobs:
             java-version: '17'
             distribution: 'adopt'
         
-        - name: Start Database Service
-          run: docker-compose up -d db
+        - name: Run Docker Compose
+          run: docker-compose up -d 
   
-        - name: Wait for Database to be Ready
+        - name: Wait 
           run: |
-            until docker exec world_db mysqladmin ping -h "localhost" --silent; do
-              echo "Waiting for database connection..."
               sleep 100
-            done
   
         - name: Run Unit Tests
           env:

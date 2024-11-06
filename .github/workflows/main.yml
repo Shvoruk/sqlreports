@@ -17,8 +17,8 @@ jobs:
             java-version: '17'
             distribution: 'adopt'
         
-        - name: Run Docker Compose
-          run: docker-compose up -d 
+        - name: Run db service
+          run: docker compose up -d db
   
         - name: Wait 
           run: |

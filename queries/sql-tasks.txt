@@ -1,0 +1,176 @@
+1. Countries by Population (Largest to Smallest).txt
+SELECT Name, Population 
+FROM country
+ORDER BY Population DESC;
+
+2. Countries in a Continent by Population (Largest to Smallest).txt  
+SELECT Name, Population 
+FROM country
+WHERE Continent = 'Asia' -- Replace 'Asia' with desired continent
+ORDER BY Population DESC;
+
+3. Countries in a Region by Population (Largest to Smallest).txt
+SELECT Name, Population
+FROM country  
+WHERE Region = 'Southeast Asia' -- Replace 'Southeast Asia' with desired region  
+ORDER BY Population DESC;
+
+4. Top N Countries by Population (World).txt
+SELECT Name, Population
+FROM country
+ORDER BY Population DESC
+LIMIT 10; -- Replace 10 with desired number N
+
+5. Top N Countries by Population (Continent).txt 
+SELECT Name, Population 
+FROM country
+WHERE Continent = 'Europe' -- Replace 'Europe' with desired continent
+ORDER BY Population DESC  
+LIMIT 5; -- Replace 5 with desired number N
+
+6. Top N Countries by Population (Region).txt
+SELECT Name, Population  
+FROM country
+WHERE Region = 'Eastern Asia' -- Replace 'Eastern Asia' with desired region
+ORDER BY Population DESC
+LIMIT 3; -- Replace 3 with desired number N
+
+7. Cities by Population (Largest to Smallest).txt
+SELECT Name, Population 
+FROM city
+ORDER BY Population DESC;
+
+8. Cities in a Continent by Population (Largest to Smallest).txt
+SELECT city.Name, city.Population
+FROM city
+JOIN country ON city.CountryCode = country.Code  
+WHERE country.Continent = 'North America' -- Replace 'North America' with desired continent
+ORDER BY city.Population DESC;
+
+9. Cities in a Region by Population (Largest to Smallest).txt  
+SELECT city.Name, city.Population
+FROM city
+JOIN country ON city.CountryCode = country.Code
+WHERE country.Region = 'Caribbean' -- Replace 'Caribbean' with desired region  
+ORDER BY city.Population DESC;
+
+10. Cities in a Country by Population (Largest to Smallest).txt  
+SELECT Name, Population
+FROM city
+WHERE CountryCode = 'JPN' -- Replace 'JPN' with desired country code
+ORDER BY Population DESC;
+
+11. Cities in a District by Population (Largest to Smallest).txt
+SELECT Name, Population
+FROM city  
+WHERE District = 'New York' -- Replace 'New York' with desired district
+ORDER BY Population DESC;
+
+12. Top N Cities by Population (World).txt
+SELECT Name, Population
+FROM city
+ORDER BY Population DESC  
+LIMIT 15; -- Replace 15 with desired number N 
+
+13. Top N Cities by Population (Continent).txt 
+SELECT city.Name, city.Population
+FROM city 
+JOIN country ON city.CountryCode = country.Code
+WHERE country.Continent = 'Africa' -- Replace 'Africa' with desired continent
+ORDER BY city.Population DESC  
+LIMIT 10; -- Replace 10 with desired number N
+
+14. Top N Cities by Population (Region).txt
+SELECT city.Name, city.Population
+FROM city
+JOIN country ON city.CountryCode = country.Code 
+WHERE country.Region = 'Southern Europe' -- Replace 'Southern Europe' with desired region 
+ORDER BY city.Population DESC
+LIMIT 5; -- Replace 5 with desired number N  
+
+15. Top N Cities by Population (Country).txt
+SELECT Name, Population 
+FROM city
+WHERE CountryCode = 'USA' -- Replace 'USA' with desired country code
+ORDER BY Population DESC
+LIMIT 10; -- Replace 10 with desired number N
+
+16. Top N Cities by Population (District).txt
+SELECT Name, Population  
+FROM city
+WHERE District = 'California' -- Replace 'California' with desired district  
+ORDER BY Population DESC
+LIMIT 3; -- Replace 3 with desired number N 
+
+17. Capital Cities by Population (Largest to Smallest).txt 
+SELECT city.Name, city.Population
+FROM city 
+JOIN country ON city.ID = country.Capital
+ORDER BY city.Population DESC;
+
+18. Capital Cities in a Continent by Population (Largest to Smallest).txt
+SELECT city.Name, city.Population
+FROM city
+JOIN country ON city.ID = country.Capital  
+WHERE country.Continent = 'South America' -- Replace 'South America' with desired continent
+ORDER BY city.Population DESC;  
+
+19. Capital Cities in a Region by Population (Largest to Smallest).txt  
+SELECT city.Name, city.Population
+FROM city
+JOIN country ON city.ID = country.Capital
+WHERE country.Region = 'Middle East' -- Replace 'Middle East' with desired region  
+ORDER BY city.Population DESC;
+
+20. Top N Capital Cities by Population (World).txt
+SELECT city.Name, city.Population  
+FROM city
+JOIN country ON city.ID = country.Capital  
+ORDER BY city.Population DESC
+LIMIT 5; -- Replace 5 with desired number N 
+
+21. Top N Capital Cities by Population (Continent).txt
+SELECT city.Name, city.Population
+FROM city
+JOIN country ON city.ID = country.Capital 
+WHERE country.Continent = 'Asia' -- Replace 'Asia' with desired continent 
+ORDER BY city.Population DESC
+LIMIT 10; -- Replace 10 with desired number N  
+
+22. Top N Capital Cities by Population (Region).txt  
+SELECT city.Name, city.Population
+FROM city
+JOIN country ON city.ID = country.Capital
+WHERE country.Region = 'Eastern Europe' -- Replace 'Eastern Europe' with desired region
+ORDER BY city.Population DESC  
+LIMIT 3; -- Replace 3 with desired number N
+
+23. Population Breakdown by Continent.txt
+SELECT 
+    country.Continent,
+    SUM(country.Population) AS total_population,
+    SUM(city.Population) AS city_population,  
+    SUM(country.Population) - SUM(city.Population) AS rural_population
+FROM country
+LEFT JOIN city ON country.Code = city.CountryCode  
+GROUP BY country.Continent;
+
+24. Population Breakdown by Region.txt  
+SELECT
+    country.Region, 
+    SUM(country.Population) AS total_population,
+    SUM(city.Population) AS city_population,
+    SUM(country.Population) - SUM(city.Population) AS rural_population
+FROM country  
+LEFT JOIN city ON country.Code = city.CountryCode
+GROUP BY country.Region;
+
+25. Population Breakdown by Country.txt
+SELECT 
+    country.Name,
+    country.Population AS total_population,
+    SUM(city.Population) AS city_population,  
+    country.Population - SUM(city.Population) AS rural_population
+FROM country
+LEFT JOIN city ON country.Code = city.CountryCode   
+GROUP BY country.Code;

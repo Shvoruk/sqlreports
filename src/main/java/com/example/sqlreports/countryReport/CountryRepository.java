@@ -10,5 +10,8 @@ import java.util.List;
 public interface CountryRepository extends CrudRepository <CountryEntity, String> {
 
     @Query( "SELECT Name, Population FROM country ORDER BY Population DESC" )
-    List<CountryEntity> findAllCountriesLargestToSmallest();
+    List<CountryEntity> findAllCountriesByWorldOrderedByPopulation();
+
+    @Query("SELECT * FROM country WHERE Continent = :continent ORDER BY Population DESC")
+    List<CountryEntity> findCountriesByContinentOrderedByPopulation(String continent);
 }

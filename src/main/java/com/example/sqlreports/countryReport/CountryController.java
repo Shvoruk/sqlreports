@@ -10,8 +10,14 @@ import java.util.List;
 @RequestMapping("/")
 public class CountryController {
 
-    @GetMapping
-    public List<CountryEntity> getCountries() {
-        return CountryRepository.findALlCountriesLargestToSmallest();
+    private final CountryService countryService;
+
+    public CountryController(CountryService countryService) {
+         this.countryService = countryService;
+    }
+
+    @GetMapping("/world")
+    public List<CountryEntity> getCountriesInTheWorld() {
+        return countryService.getAllCountriesLargestToSmallest();
     }
 }

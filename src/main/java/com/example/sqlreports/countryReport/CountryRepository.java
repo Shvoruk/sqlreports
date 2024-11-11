@@ -14,4 +14,7 @@ public interface CountryRepository extends CrudRepository <CountryEntity, String
 
     @Query("SELECT * FROM country WHERE Continent = :continent ORDER BY Population DESC")
     List<CountryEntity> findCountriesByContinentOrderedByPopulation(String continent);
+
+    @Query("SELECT Name, Population FROM country WHERE Region = :region ORDER BY Population DESC")
+    List<CountryEntity> findCountriesByRegionOrderByPopulation(String region);
 }

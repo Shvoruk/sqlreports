@@ -23,4 +23,9 @@ public class CountryController {
     public List<CountryEntity> getCountriesInTheContinent(@PathVariable String continent) {
         return countryService.getAllCountriesInContinent(continent);
     }
+
+    @GetMapping("/region/{region}")
+    public List<CountryEntity> getCountriesInTheRegion(@PathVariable String region) {
+        return countryService.getAllCountriesInRegion(region);
+    }
 }

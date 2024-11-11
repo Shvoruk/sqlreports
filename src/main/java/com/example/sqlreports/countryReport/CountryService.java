@@ -20,4 +20,8 @@ public class CountryService {
     public List<CountryEntity> getAllCountriesInContinent(String continent) {
         return countryRepository.findCountriesByContinentOrderedByPopulation(continent);
     }
+
+    public List<CountryEntity> getAllCountriesInRegion(String region) {
+        return countryRepository.findCountriesByRegionOrderByPopulation(region);
+    }
 }

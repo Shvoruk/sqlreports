@@ -1,4 +1,4 @@
-name: A workflow for my sql reports App
+name: A workflow for my SQL reports App
 on: push
 
 jobs:
@@ -16,13 +16,28 @@ jobs:
           with:
             java-version: '17'
             distribution: 'adopt'
-        
+
+        - name: Cache Maven dependencies
+          uses: actions/cache@v2
+          with:
+            path: ~/.m2/repository
+            key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+            restore-keys: |
+              ${{ runner.os }}-maven-
+  
         - name: Run db service
           run: docker compose up -d db
   
-        - name: Wait 
+        - name: Wait for MySQL to be ready
           run: |
-              sleep 60
+            for i in {1..10}; do
+              if docker exec db mysqladmin ping -h"localhost" --silent; then
+                echo "Database is up!"
+                break
+              fi
+              echo "Waiting for database... ($i/10)"
+              sleep 6
+            done
   
         - name: Run Unit Tests
           env:
@@ -46,6 +61,15 @@ jobs:
           with:
             java-version: '17'
             distribution: 'adopt'
+
+        - name: Cache Maven dependencies
+          uses: actions/cache@v2
+          with:
+            path: ~/.m2/repository
+            key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+            restore-keys: |
+              ${{ runner.os }}-maven-
   
         - name: Run Docker Compose
           run: docker-compose up -d
+

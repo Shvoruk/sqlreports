@@ -5,27 +5,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/countries")
 public class CountryController {
 
     private final CountryService countryService;
 
-    public CountryController(CountryService countryService) {
-         this.countryService = countryService;
-    }
+        public CountryController(CountryService countryService) {
+            this.countryService = countryService;
+        }
 
-    @GetMapping("/world")
-    public List<CountryEntity> getCountriesInTheWorld() {
-        return countryService.getAllCountriesInWorld();
-    }
+        @GetMapping("/world")
+        public List<CountryEntity> getCountriesInTheWorld(@RequestParam(required = false) Integer limit) {
 
-    @GetMapping("/continent{continent}")
-    public List<CountryEntity> getCountriesInTheContinent(@PathVariable String continent) {
-        return countryService.getAllCountriesInContinent(continent);
-    }
+            if (limit != null) {
+                return countryService.getAllCountriesInWorldLimited(limit);
+            }
+            return countryService.getAllCountriesInWorld();
+        }
 
-    @GetMapping("/region/{region}")
-    public List<CountryEntity> getCountriesInTheRegion(@PathVariable String region) {
-        return countryService.getAllCountriesInRegion(region);
+        @GetMapping("/continent")
+        public List<CountryEntity> getCountriesInTheContinent(@RequestParam String continent, @RequestParam(required = false) Integer limit) {
+
+            if (limit != null) {
+                return countryService.getAllCountriesInContinentLimited(continent, limit);
+            }
+            return countryService.getAllCountriesInContinent(continent);
+        }
+
+        @GetMapping("/region")
+        public List<CountryEntity> getCountriesInTheRegion(@RequestParam String region, @RequestParam(required = false) Integer limit) {
+
+            if (limit != null) {
+                return countryService.getAllCountriesInRegionLimited(region, limit);
+            }
+            return countryService.getAllCountriesInRegion(region);
+        }
     }
-}

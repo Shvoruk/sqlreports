@@ -22,6 +22,18 @@ public class CountryService {
     }
 
     public List<CountryEntity> getAllCountriesInRegion(String region) {
-        return countryRepository.findCountriesByRegionOrderByPopulation(region);
+        return countryRepository.findCountriesByRegionOrderedByPopulation(region);
+    }
+
+    public List<CountryEntity> getAllCountriesInWorldLimited(Integer limit) {
+        return countryRepository.findAllCountriesWithLimitByWorldOrderedByPopulation(limit);
+    }
+
+    public List<CountryEntity> getAllCountriesInContinentLimited(String continent, Integer limit) {
+        return countryRepository.findCountriesWithLimitByContinentOrderedByPopulation(continent, limit);
+    }
+
+    public List<CountryEntity> getAllCountriesInRegionLimited(String region, Integer limit) {
+        return countryRepository.findCountriesWithLimitByRegionOrderedByPopulation(region, limit);
     }
 }

@@ -26,7 +26,7 @@ jobs:
               ${{ runner.os }}-maven-
   
         - name: Start Docker Compose Services
-          run: docker-compose up -d db  # Start the db service only
+          run: docker compose up -d db  # Start the db service only
 
         - name: Wait for MySQL to be ready
           run: |

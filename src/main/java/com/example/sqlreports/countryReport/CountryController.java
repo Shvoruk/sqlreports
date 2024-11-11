@@ -1,8 +1,6 @@
 package com.example.sqlreports.countryReport;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +16,11 @@ public class CountryController {
 
     @GetMapping("/world")
     public List<CountryEntity> getCountriesInTheWorld() {
-        return countryService.getAllCountriesLargestToSmallest();
+        return countryService.getAllCountriesInWorld();
+    }
+
+    @GetMapping("/continent{continent}")
+    public List<CountryEntity> getCountriesInTheContinent(@PathVariable String continent) {
+        return countryService.getAllCountriesInContinent(continent);
     }
 }

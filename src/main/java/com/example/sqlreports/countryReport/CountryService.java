@@ -13,7 +13,11 @@ public class CountryService {
         this.countryRepository = countryRepository;
     }
 
-    public List<CountryEntity> getAllCountriesLargestToSmallest() {
-        return countryRepository.findAllCountriesLargestToSmallest();
+    public List<CountryEntity> getAllCountriesInWorld() {
+        return countryRepository.findAllCountriesByWorldOrderedByPopulation();
+    }
+
+    public List<CountryEntity> getAllCountriesInContinent(String continent) {
+        return countryRepository.findCountriesByContinentOrderedByPopulation(continent);
     }
 }

@@ -36,5 +36,5 @@ jobs:
           distribution: 'adopt'
       - name: Package and Run docker compose
         run: |
-          mvn package -DskipTests
+          mvn clean package -DskipTests
           docker compose up -d --abort-on-container-exit

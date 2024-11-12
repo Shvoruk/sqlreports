@@ -22,5 +22,5 @@ public interface CityRepository extends CrudRepository <CityEntity, Integer> {
     List<CityEntity> findAllCitiesByRegionOrderByPopulation(String region);
 
     @Query("SELECT Name, Population FROM city WHERE District = :district ORDER BY Population DESC")
-    List<CityEntity> indAllCitiesByDistrictOrderByPopulation(String district);
+    List<CityEntity> findAllCitiesByDistrictOrderByPopulation(String district);
 }

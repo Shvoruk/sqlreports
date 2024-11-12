@@ -1,12 +1,14 @@
 package com.example.sqlreports.cityReport;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 
 public class CityEntity {
 
     @Id
     private Integer id;
     private String name;
+    @Column("CountryCode")
     private String countryCode;
     private String district;
     private Integer population;

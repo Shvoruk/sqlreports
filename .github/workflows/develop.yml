@@ -1,9 +1,12 @@
 name: Workflow for develop branch
-on: push
+on:
+  push:
+    branches:
+      - develop
 jobs:
 
-  UnitTests:
-    name: Unit Tests
+  IntegrationTests:
+    name: Integration Test
     runs-on: ubuntu-20.04
 
     services:
@@ -16,8 +19,6 @@ jobs:
           MYSQL_PASSWORD: password
         ports:
           - 3306:3306
-        volumes:
-          - /tmp/db/world.sql:/docker-entrypoint-initdb.d/world.sql
 
     steps:
       - name: Checkout code
@@ -29,18 +30,26 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Run Unit Tests
+      - name: Run Tests
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/world
           SPRING_DATASOURCE_USERNAME: user
           SPRING_DATASOURCE_PASSWORD: password
-          SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
+          SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
         run: mvn test
 
-  build:
+      - name: CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos
+          directory: ./target/site/jacoco
+          flags: Integration Tests # optional
+          verbose: true # optional (default = false)
+
+  Build:
     name: Build and Run with Docker Compose
     runs-on: ubuntu-20.04
-    needs: UnitTests
+    needs: IntegrationTests
 
     steps:
       - name: Checkout code

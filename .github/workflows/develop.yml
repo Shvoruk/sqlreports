@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - develop
+      - workflow-update
 jobs:
 
   IntegrationTests:

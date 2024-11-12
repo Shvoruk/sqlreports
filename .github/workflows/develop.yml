@@ -27,13 +27,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Wait for Database to be Ready
-        run: |
-          until docker exec db mysql -u user -p password -e "SHOW DATABASES;" > /dev/null 2>&1; do
-            echo "Waiting for database connection..."
-            sleep 5
-          done
-
       - name: Run Unit Tests
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/world

@@ -13,7 +13,7 @@ public class CityEntity {
     private String district;
     private Integer population;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -45,7 +45,7 @@ public class CityEntity {
         this.district = district;
     }
 
-    public int getPopulation() {
+    public Integer getPopulation() {
         return population;
     }
 

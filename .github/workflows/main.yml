@@ -18,7 +18,7 @@ jobs:
             distribution: 'adopt'
             
         - name: Clean up Docker environment
-          run: docker-compose down -v 
+          run: docker compose down -v 
         
         - name: Start Docker Compose Services
           run: docker compose up -d db  

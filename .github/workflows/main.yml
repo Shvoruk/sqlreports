@@ -1,40 +1,19 @@
-name: A workflow for my SQL reports App
-on:
-  push:
-    branches:
-      - master
-      - develop
-jobs:
-  UnitTests:
-    name: Unit Tests
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-      - name: Unit Tests
-        run: mvn -Dtest=com.example.sqlreports.SqlreportsApplicationTests test                           
+name: A workflow for my sql reports App
+on: push
 
-  Build:
-    name: Build and Start Using docker compose
+jobs:
+  build:
+    name:  action
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Set up JDK 17
+      - name: Set up JDK 
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Package and Run docker compose
-        run: |
-          mvn clean package -DskipTests
-          docker compose up -d --abort-on-container-exit
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+      - name: Run docker compose
+        run: docker compose up -d

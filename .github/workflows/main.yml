@@ -17,28 +17,15 @@ jobs:
             java-version: '17'
             distribution: 'adopt'
             
-        - name: Clean up Docker environment
-          run: docker compose down -v 
-        
         - name: Start Docker Compose Services
           run: docker compose up -d db  
-
-        - name: Wait for MySQL to be ready
-          run: |
-            for i in {1..10}; do
-              if docker exec world_db mysqladmin ping -h"localhost" --silent; then
-                echo "Database is up!"
-                break
-              fi
-              echo "Waiting for database... ($i/10)"
-              sleep 10
-            done
 
         - name: Run Unit Tests
           env:
             SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/world
             SPRING_DATASOURCE_USERNAME: user
             SPRING_DATASOURCE_PASSWORD: password
+            SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
           run: mvn test
   
     build:

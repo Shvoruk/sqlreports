@@ -16,6 +16,8 @@ jobs:
           MYSQL_PASSWORD: password
         ports:
           - 3306:3306
+        volumes:
+          - ./db/world.sql:/docker-entrypoint-initdb.d/world.sql
 
     steps:
       - name: Checkout code

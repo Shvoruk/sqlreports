@@ -1,5 +1,6 @@
 package com.example.sqlreports.cityReport;
 
+import com.example.sqlreports.countryReport.CountryEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,23 +14,45 @@ public class CityService {
         this.cityRepository = cityRepository;
     }
 
-    public List<CityEntity> getAllCountriesInWorld() {
+    public List<CityEntity> getAllCitiesInWorld() {
         return cityRepository.findAllCitiesByWorldOrderedByPopulation();
     }
 
-    public List<CityEntity> getAllCountriesInContinent(String continent) {
+    public List<CityEntity> getAllCitiesInContinent(String continent) {
         return cityRepository.findAllCitiesByContinentOrderedByPopulation(continent);
     }
 
-    public List<CityEntity> getAllCountriesInRegion(String region) {
+    public List<CityEntity> getAllCitiesInRegion(String region) {
         return cityRepository.findAllCitiesByRegionOrderByPopulation(region);
     }
 
-    public List<CityEntity> getAllCountriesInCountry(String country) {
+    public List<CityEntity> getAllCitiesInCountry(String country) {
         return cityRepository.findAllCitiesByCountryOrderedByPopulation(country);
     }
 
-    public List<CityEntity> getAllCountriesInDistrict(String district) {
+    public List<CityEntity> getAllCitiesInDistrict(String district) {
         return cityRepository.findAllCitiesByDistrictOrderByPopulation(district);
     }
+
+    public List<CityEntity> getAllCitiesInWorldLimited(Integer limit) {
+        return cityRepository.findCitiesWithLimitByWorldOrderedByPopulation(limit);
+    }
+
+    public List<CityEntity> getAllCitiesInContinentLimited(String continent, Integer limit) {
+        return cityRepository.findCitiesWithLimitByContinentOrderedByPopulation(continent, limit);
+    }
+
+    public List<CityEntity> getAllCitiesInRegionLimited(String region, Integer limit) {
+        return cityRepository.findCitiesWithLimitByRegionOrderedByPopulation(region, limit);
+    }
+
+    public List<CityEntity> getAllCitiesInCountryLimited(String country, Integer limit) {
+        return cityRepository.findCitiesWithLimitByCountryOrderedByPopulation(country, limit);
+    }
+
+    public List<CityEntity> getAllCitiesInDistrictLimited(String district, Integer limit) {
+        return cityRepository.findCitiesWithLimitByDistrictOrderedByPopulation(district, limit);
+    }
+
+
 }

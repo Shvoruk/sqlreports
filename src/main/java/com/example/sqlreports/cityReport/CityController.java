@@ -15,27 +15,42 @@ public class CityController {
     }
 
     @GetMapping("/world")
-    public List<CityEntity> getCitiesInWorld() {
-        return cityService.getAllCountriesInWorld();
+    public List<CityEntity> getCitiesInWorld( @RequestParam(required = false) Integer limit) {
+        if(limit != null){
+            return cityService.getAllCitiesInWorldLimited(limit);
+        }
+        return cityService.getAllCitiesInWorld();
     }
 
     @GetMapping("/continent")
-    public List<CityEntity> getCitiesInContinent(@RequestParam String continent) {
-        return cityService.getAllCountriesInContinent(continent);
+    public List<CityEntity> getCitiesInContinent(@RequestParam String continent,  @RequestParam(required = false) Integer limit) {
+        if(limit != null){
+            return cityService.getAllCitiesInContinentLimited(continent, limit);
+        }
+        return cityService.getAllCitiesInContinent(continent);
     }
 
     @GetMapping("/region")
-    public List<CityEntity> getCitiesInRegion(@RequestParam String region) {
-        return cityService.getAllCountriesInRegion(region);
+    public List<CityEntity> getCitiesInRegion(@RequestParam String region,  @RequestParam(required = false) Integer limit) {
+        if(limit != null){
+            return cityService.getAllCitiesInRegionLimited(region, limit);
+        }
+        return cityService.getAllCitiesInRegion(region);
     }
 
     @GetMapping("/country")
-    public List<CityEntity> getCitiesInCountry(@RequestParam String country) {
-        return cityService.getAllCountriesInCountry(country);
+    public List<CityEntity> getCitiesInCountry(@RequestParam String country,  @RequestParam(required = false) Integer limit) {
+        if(limit != null){
+            return cityService.getAllCitiesInCountryLimited(country, limit);
+        }
+        return cityService.getAllCitiesInCountry(country);
     }
 
     @GetMapping("/district")
-    public List<CityEntity> getCitiesInDistrict(@RequestParam String district) {
-        return cityService.getAllCountriesInDistrict(district);
+    public List<CityEntity> getCitiesInDistrict(@RequestParam String district,  @RequestParam(required = false) Integer limit) {
+        if(limit != null){
+            return cityService.getAllCitiesInDistrictLimited(district, limit);
+        }
+        return cityService.getAllCitiesInDistrict(district);
     }
 }

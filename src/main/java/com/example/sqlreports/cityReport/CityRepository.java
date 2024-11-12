@@ -23,4 +23,14 @@ public interface CityRepository extends CrudRepository <CityEntity, Integer> {
 
     @Query("SELECT Name, Population FROM city WHERE District = :district ORDER BY Population DESC")
     List<CityEntity> findAllCitiesByDistrictOrderByPopulation(String district);
+
+    List<CityEntity> findCitiesWithLimitByWorldOrderedByPopulation(Integer limit);
+
+    List<CityEntity> findCitiesWithLimitByContinentOrderedByPopulation(String continent, Integer limit);
+
+    List<CityEntity> findCitiesWithLimitByRegionOrderedByPopulation(String region, Integer limit);
+
+    List<CityEntity> findCitiesWithLimitByCountryOrderedByPopulation(String country, Integer limit);
+
+    List<CityEntity> findCitiesWithLimitByDistrictOrderedByPopulation(String district, Integer limit);
 }

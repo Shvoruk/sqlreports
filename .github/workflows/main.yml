@@ -16,17 +16,12 @@ jobs:
           with:
             java-version: '17'
             distribution: 'adopt'
-
-        - name: Cache Maven dependencies
-          uses: actions/cache@v2
-          with:
-            path: ~/.m2/repository
-            key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-            restore-keys: |
-              ${{ runner.os }}-maven-
-  
+            
+        - name: Clean up Docker environment
+          run: docker-compose down -v 
+        
         - name: Start Docker Compose Services
-          run: docker compose up -d db  # Start the db service only
+          run: docker compose up -d db  
 
         - name: Wait for MySQL to be ready
           run: |
@@ -36,12 +31,11 @@ jobs:
                 break
               fi
               echo "Waiting for database... ($i/10)"
-              sleep 6
+              sleep 10
             done
 
         - name: Run Unit Tests
           env:
-            MYSQL_ROOT_PASSWORD: rootpassword
             SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/world
             SPRING_DATASOURCE_USERNAME: user
             SPRING_DATASOURCE_PASSWORD: password
@@ -61,14 +55,6 @@ jobs:
           with:
             java-version: '17'
             distribution: 'adopt'
-
-        - name: Cache Maven dependencies
-          uses: actions/cache@v2
-          with:
-            path: ~/.m2/repository
-            key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-            restore-keys: |
-              ${{ runner.os }}-maven-
   
         - name: Run Docker Compose
           run: docker compose up -d

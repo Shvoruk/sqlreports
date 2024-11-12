@@ -5,17 +5,17 @@ import org.springframework.data.annotation.Id;
 public class CityEntity {
 
     @Id
-    private int id;
+    private Integer id;
     private String name;
     private String countryCode;
     private String district;
-    private int population;
+    private Integer population;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -47,7 +47,7 @@ public class CityEntity {
         return population;
     }
 
-    public void setPopulation(int population) {
+    public void setPopulation(Integer population) {
         this.population = population;
     }
 }

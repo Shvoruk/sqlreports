@@ -23,7 +23,7 @@ public class CityService {
     }
 
     public List<CityEntity> getAllCitiesInRegion(String region) {
-        return cityRepository.findAllCitiesByRegionOrderByPopulation(region);
+        return cityRepository.findAllCitiesByRegionOrderedByPopulation(region);
     }
 
     public List<CityEntity> getAllCitiesInCountry(String country) {
@@ -31,7 +31,7 @@ public class CityService {
     }
 
     public List<CityEntity> getAllCitiesInDistrict(String district) {
-        return cityRepository.findAllCitiesByDistrictOrderByPopulation(district);
+        return cityRepository.findAllCitiesByDistrictOrderedByPopulation(district);
     }
 
     public List<CityEntity> getAllCitiesInWorldLimited(Integer limit) {

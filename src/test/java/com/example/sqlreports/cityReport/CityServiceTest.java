@@ -65,12 +65,12 @@ class CityServiceTest {
 
     @Test
     void testGetAllCitiesInRegion() {
-        when(cityRepository.findAllCitiesByRegionOrderByPopulation("Midwest")).thenReturn(mockCities);
+        when(cityRepository.findAllCitiesByRegionOrderedByPopulation("Midwest")).thenReturn(mockCities);
 
         List<CityEntity> result = cityService.getAllCitiesInRegion("Midwest");
 
         assertEquals(mockCities, result);
-        verify(cityRepository).findAllCitiesByRegionOrderByPopulation("Midwest");
+        verify(cityRepository).findAllCitiesByRegionOrderedByPopulation("Midwest");
     }
 
     @Test
@@ -85,12 +85,12 @@ class CityServiceTest {
 
     @Test
     void testGetAllCitiesInDistrict() {
-        when(cityRepository.findAllCitiesByDistrictOrderByPopulation("District1")).thenReturn(mockCities);
+        when(cityRepository.findAllCitiesByDistrictOrderedByPopulation("District1")).thenReturn(mockCities);
 
         List<CityEntity> result = cityService.getAllCitiesInDistrict("District1");
 
         assertEquals(mockCities, result);
-        verify(cityRepository).findAllCitiesByDistrictOrderByPopulation("District1");
+        verify(cityRepository).findAllCitiesByDistrictOrderedByPopulation("District1");
     }
 
     @Test

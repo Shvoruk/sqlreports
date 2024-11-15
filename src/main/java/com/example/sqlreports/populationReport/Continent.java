@@ -8,11 +8,8 @@ public class Continent {
 
     @Column("Continent")
     private String name;
-    @Column("total_population")
     private BigInteger totalPopulation;
-    @Column("city_population")
     private BigInteger cityPopulation;
-    @Column("rural_population")
     private BigInteger ruralPopulation;
 
     public String getName() {

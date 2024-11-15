@@ -7,17 +7,17 @@ import java.math.BigInteger;
 public class Region {
 
     @Column("Region")
-    private String name;
+    private String region;
     private BigInteger totalPopulation;
     private BigInteger cityPopulation;
     private BigInteger ruralPopulation;
 
-    public String getName() {
-        return name;
+    public String getRegion() {
+        return region;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public BigInteger getTotalPopulation() {

@@ -9,7 +9,16 @@ import java.util.List;
 @Repository
 public interface CountryRepo extends CrudRepository<Country, Integer> {
 
-    @Query("SELECT country.Name, country.Population AS total_population, SUM(city.Population) AS city_population, country.Population - SUM(city.Population) AS rural_population FROM country LEFT JOIN city ON country.Code = city.CountryCode GROUP BY country.Code")
+    @Query("SELECT \n" +
+            "    country.Name,\n" +
+            "    country.Population AS Total_Population,\n" +
+            "    SUM(city.Population) AS City_Population,\n" +
+            "    CONCAT(ROUND(SUM(city.Population) / country.Population * 100, 2), '%') AS City_Percentage,\n" +
+            "    (country.Population - SUM(city.Population)) AS Rural_Population,\n" +
+            "    CONCAT(ROUND((country.Population - SUM(city.Population)) / country.Population * 100, 2), '%') AS Rural_Percentage\n" +
+            "FROM country \n" +
+            "LEFT JOIN city ON country.Code = city.CountryCode  \n" +
+            "GROUP BY country.Code")
     List<Country> findPopulationInCountryFiltered();
 
 }

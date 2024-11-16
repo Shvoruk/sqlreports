@@ -2,15 +2,16 @@ package com.example.sqlreports.populationReport;
 
 import org.springframework.data.relational.core.mapping.Column;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 public class Continent {
 
-    @Column("Continent")
     private String continent;
-    private BigInteger totalPopulation;
-    private BigInteger cityPopulation;
-    private BigInteger ruralPopulation;
+    private BigDecimal totalPopulation;
+    private BigDecimal cityPopulation;
+    private String cityPercentage;
+    private BigDecimal ruralPopulation;
+    private String ruralPercentage;
 
     public String getContinent() {
         return continent;
@@ -20,27 +21,43 @@ public class Continent {
         this.continent = continent;
     }
 
-    public BigInteger getTotalPopulation() {
+    public BigDecimal getTotalPopulation() {
         return totalPopulation;
     }
 
-    public void setTotalPopulation(BigInteger totalPopulation) {
+    public void setTotalPopulation(BigDecimal totalPopulation) {
         this.totalPopulation = totalPopulation;
     }
 
-    public BigInteger getCityPopulation() {
+    public BigDecimal getCityPopulation() {
         return cityPopulation;
     }
 
-    public void setCityPopulation(BigInteger cityPopulation) {
+    public void setCityPopulation(BigDecimal cityPopulation) {
         this.cityPopulation = cityPopulation;
     }
 
-    public BigInteger getRuralPopulation() {
+    public BigDecimal getRuralPopulation() {
         return ruralPopulation;
     }
 
-    public void setRuralPopulation(BigInteger ruralPopulation) {
+    public void setRuralPopulation(BigDecimal ruralPopulation) {
         this.ruralPopulation = ruralPopulation;
+    }
+
+    public String getCityPercentage() {
+        return cityPercentage;
+    }
+
+    public void setCityPercentage(String cityPercentage) {
+        this.cityPercentage = cityPercentage;
+    }
+
+    public String getRuralPercentage() {
+        return ruralPercentage;
+    }
+
+    public void setRuralPercentage(String ruralPercentage) {
+        this.ruralPercentage = ruralPercentage;
     }
 }

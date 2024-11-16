@@ -1,13 +1,9 @@
 package com.example.sqlreports.cityReport;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-
 public class CityEntity {
 
     private String name;
-    @Column("CountryCode")
-    private String countryCode;
+    private String country;
     private String district;
     private Integer population;
 
@@ -20,12 +16,12 @@ public class CityEntity {
         this.name = name;
     }
 
-    public String getCountryCode() {
-        return countryCode;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getDistrict() {

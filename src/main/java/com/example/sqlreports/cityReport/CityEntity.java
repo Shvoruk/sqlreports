@@ -5,21 +5,12 @@ import org.springframework.data.relational.core.mapping.Column;
 
 public class CityEntity {
 
-    @Id
-    private Integer id;
     private String name;
     @Column("CountryCode")
     private String countryCode;
     private String district;
     private Integer population;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

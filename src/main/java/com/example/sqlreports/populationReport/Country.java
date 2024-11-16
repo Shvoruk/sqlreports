@@ -10,7 +10,9 @@ public class Country {
     private String country;
     private BigInteger totalPopulation;
     private BigInteger cityPopulation;
+    private String cityPercentage;
     private BigInteger ruralPopulation;
+    private String ruralPercentage;
 
     public String getCountry() {
         return country;
@@ -42,5 +44,21 @@ public class Country {
 
     public void setRuralPopulation(BigInteger ruralPopulation) {
         this.ruralPopulation = ruralPopulation;
+    }
+
+    public String getCityPercentage() {
+        return cityPercentage;
+    }
+
+    public void setCityPercentage(String cityPercentage) {
+        this.cityPercentage = cityPercentage;
+    }
+
+    public String getRuralPercentage() {
+        return ruralPercentage;
+    }
+
+    public void setRuralPercentage(String ruralPercentage) {
+        this.ruralPercentage = ruralPercentage;
     }
 }

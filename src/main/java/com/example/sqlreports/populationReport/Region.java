@@ -6,11 +6,12 @@ import java.math.BigInteger;
 
 public class Region {
 
-    @Column("Region")
     private String region;
     private BigInteger totalPopulation;
     private BigInteger cityPopulation;
+    private String cityPercentage;
     private BigInteger ruralPopulation;
+    private String ruralPercentage;
 
     public String getRegion() {
         return region;
@@ -42,5 +43,21 @@ public class Region {
 
     public void setRuralPopulation(BigInteger ruralPopulation) {
         this.ruralPopulation = ruralPopulation;
+    }
+
+    public String getCityPercentage() {
+        return cityPercentage;
+    }
+
+    public void setCityPercentage(String cityPercentage) {
+        this.cityPercentage = cityPercentage;
+    }
+
+    public String getRuralPercentage() {
+        return ruralPercentage;
+    }
+
+    public void setRuralPercentage(String ruralPercentage) {
+        this.ruralPercentage = ruralPercentage;
     }
 }

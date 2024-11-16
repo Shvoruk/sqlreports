@@ -9,6 +9,15 @@ import java.util.List;
 @Repository
 public interface RegionRepository extends CrudRepository<Region, Integer> {
 
-    @Query("SELECT country.Region, SUM(country.Population) AS total_population, SUM(city.Population) AS city_population, SUM(country.Population) - SUM(city.Population) AS rural_population FROM country LEFT JOIN city ON country.Code = city.CountryCode GROUP BY country.Region")
+    @Query("SELECT \n" +
+            "    country.Region AS Region,\n" +
+            "    SUM(country.Population) AS Total_Population,  \n" +
+            "    SUM(city.Population) AS City_Population,\n" +
+            "    CONCAT(ROUND(SUM(city.Population) / SUM(country.Population) * 100, 2), '%') AS City_Percentage,  \n" +
+            "    (SUM(country.Population) - SUM(city.Population)) AS Rural_Population,\n" +
+            "    CONCAT(ROUND((SUM(country.Population) - SUM(city.Population)) / SUM(country.Population) * 100, 2), '%') AS Rural_Percentage  \n" +
+            "FROM country\n" +
+            "LEFT JOIN city ON country.Code = city.CountryCode  \n" +
+            "GROUP BY country.Region")
     List<Region> findPopulationInRegionFiltered();
 }

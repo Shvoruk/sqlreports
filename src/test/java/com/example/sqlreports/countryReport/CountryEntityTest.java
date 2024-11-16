@@ -15,7 +15,7 @@ class CountryEntityTest {
         String continent = "Continent1";
         String region = "Region1";
         Integer population = 5000000;
-        Integer capital = 100;
+        String capital = "Capital1";
 
         country.setCode(code);
         country.setName(name);

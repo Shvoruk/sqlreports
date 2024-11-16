@@ -36,7 +36,7 @@ class CountryControllerTest {
         country1.setContinent("Continent1");
         country1.setRegion("Region1");
         country1.setPopulation(5000000);
-        country1.setCapital(1);
+        country1.setCapital("Capital1");
 
         CountryEntity country2 = new CountryEntity();
         country2.setCode("C2");
@@ -44,7 +44,7 @@ class CountryControllerTest {
         country2.setContinent("Continent2");
         country2.setRegion("Region2");
         country2.setPopulation(10000000);
-        country2.setCapital(2);
+        country2.setCapital("Capital2");
 
         mockCountries = List.of(country1, country2);
     }
@@ -61,7 +61,7 @@ class CountryControllerTest {
                 .andExpect(jsonPath("$[0].continent").value("Continent1"))
                 .andExpect(jsonPath("$[0].region").value("Region1"))
                 .andExpect(jsonPath("$[0].population").value(5000000))
-                .andExpect(jsonPath("$[0].capital").value(1))
+                .andExpect(jsonPath("$[0].capital").value("Capital1"))
                 .andExpect(jsonPath("$[1].name").value("Country2"));
     }
 

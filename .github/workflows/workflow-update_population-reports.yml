@@ -18,13 +18,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Login to Azure
+      - name: Azure Login
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CD51EE9EFDC242EF8AA601E8235B3A36 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F3F8E7D5943A47DE8892A03983CD0394 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C65B075CAA1140F3B5660ADC139A0572 }}
-          auth-type: oidc
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type: servicePrincipal
           
       - name: Log in to Azure Container Registry
         run: az acr login --name ${{ secrets.AZURE_REGISTRY_NAME }}
@@ -53,13 +53,13 @@ jobs:
 
 
     steps:
-      - name: Login to Azure
+      - name: Azure Login
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CD51EE9EFDC242EF8AA601E8235B3A36 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F3F8E7D5943A47DE8892A03983CD0394 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C65B075CAA1140F3B5660ADC139A0572 }}
-          auth-type: oidc
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type: servicePrincipal
           
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2

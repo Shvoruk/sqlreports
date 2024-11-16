@@ -34,13 +34,13 @@ class CityControllerTest {
         // Set up mock city data
         CityEntity city1 = new CityEntity();
         city1.setName("City1");
-        city1.setCountryCode("C1");
+        city1.setCountry("C1");
         city1.setDistrict("District1");
         city1.setPopulation(100000);
 
         CityEntity city2 = new CityEntity();
         city2.setName("City2");
-        city2.setCountryCode("C2");
+        city2.setCountry("C2");
         city2.setDistrict("District2");
         city2.setPopulation(200000);
 

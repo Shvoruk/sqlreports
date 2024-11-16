@@ -11,18 +11,18 @@ class CityEntityTest {
         CityEntity cityEntity = new CityEntity();
 
         String name = "Sample City";
-        String countryCode = "SC";
+        String country = "Sample Country";
         String district = "Sample District";
         Integer population = 500000;
 
 
         cityEntity.setName(name);
-        cityEntity.setCountryCode(countryCode);
+        cityEntity.setCountry(country);
         cityEntity.setDistrict(district);
         cityEntity.setPopulation(population);
 
         assertEquals(name, cityEntity.getName());
-        assertEquals(countryCode, cityEntity.getCountryCode());
+        assertEquals(country, cityEntity.getCountry());
         assertEquals(district, cityEntity.getDistrict());
         assertEquals(population, cityEntity.getPopulation());
     }

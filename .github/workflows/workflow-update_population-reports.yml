@@ -10,6 +10,8 @@ jobs:
   BuildAndPushDockerImages:
     name: Build and Push Docker Images to ACR
     runs-on: ubuntu-20.04
+    permissions:
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

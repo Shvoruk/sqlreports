@@ -1,7 +1,8 @@
+import { convertToCSV, downloadCSV, formatColumnHeader } from './export-utils.js';
+
 const BASE_URL = 'http://localhost:8080';
 
-// Add theme toggle functionality
-function toggleTheme() {
+export function toggleTheme() {
     const body = document.body;
     const currentTheme = body.getAttribute('data-theme');
     if (currentTheme === 'dark') {
@@ -13,16 +14,34 @@ function toggleTheme() {
     }
 }
 
-// Load saved theme preference
+function initializeEventListeners() {
+    const themeToggleBtn = document.querySelector('.theme-toggle');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', toggleTheme);
+    }
+
+    const reportTypeSelect = document.getElementById('reportType');
+    const scopeSelect = document.getElementById('scope');
+    const generateReportBtn = document.getElementById('generateReport');
+
+    if (reportTypeSelect) {
+        reportTypeSelect.addEventListener('change', handleReportTypeChange);
+    }
+    if (scopeSelect) {
+        scopeSelect.addEventListener('change', handleScopeChange);
+    }
+    if (generateReportBtn) {
+        generateReportBtn.addEventListener('click', generateReport);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     if (savedTheme === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
     }
 
-    reportTypeSelect.addEventListener('change', handleReportTypeChange);
-    scopeSelect.addEventListener('change', handleScopeChange);
-    generateReportBtn.addEventListener('click', generateReport);
+    initializeEventListeners();
 });
 
 const reportTypeSelect = document.getElementById('reportType');
@@ -136,6 +155,40 @@ function generateReport() {
         });
 }
 
+function handleExport(data) {
+    if (!data || data.length === 0) {
+        showNotification('No data to export', 'error');
+        return;
+    }
+
+    const reportType = document.getElementById('reportType').value;
+    const scope = document.getElementById('scope').value;
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+    const fileName = `${reportType}-${scope}-${timestamp}.csv`;
+
+    try {
+        const formattedData = data.map(item => {
+            const formattedItem = {};
+            for (const [key, value] of Object.entries(item)) {
+                if (typeof value === 'number') {
+                    formattedItem[key] = value.toLocaleString();
+                } else {
+                    formattedItem[key] = value;
+                }
+            }
+            return formattedItem;
+        });
+
+        const csvContent = convertToCSV(formattedData);
+        downloadCSV(csvContent, fileName);
+
+        showNotification('Data exported successfully!');
+    } catch (error) {
+        console.error('Export error:', error);
+        showNotification('Error exporting data', 'error');
+    }
+}
+
 function displayResults(data) {
     if (!data || data.length === 0) {
         tableContainer.innerHTML = '<p>No data available</p>';
@@ -144,28 +197,63 @@ function displayResults(data) {
 
     const headers = Object.keys(data[0]);
 
-    const tableHTML = `
-                <table>
-                    <thead>
-                        <tr>
-                            ${headers.map(header =>
-        `<th>${formatHeader(header)}</th>`
+    const resultsHTML = `
+        <div class="results-header">
+            <h3>Results (${data.length} entries)</h3>
+            <button id="exportButton" class="export-button" ${data.length === 0 ? 'disabled' : ''}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Export CSV
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    ${headers.map(header =>
+        `<th>${formatColumnHeader(header)}</th>`
     ).join('')}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.map(row => `
-                            <tr>
-                                ${headers.map(header =>
-        `<td>${row[header] ?? 'N/A'}</td>`
-    ).join('')}
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
+                </tr>
+            </thead>
+            <tbody>
+                ${data.map(row => `
+                    <tr>
+                        ${headers.map(header => {
+        const value = row[header];
 
-    tableContainer.innerHTML = tableHTML;
+        const displayValue = typeof value === 'number'
+            ? value.toLocaleString()
+            : (value ?? 'N/A');
+        return `<td>${displayValue}</td>`;
+    }).join('')}
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+    tableContainer.innerHTML = resultsHTML;
+
+    const exportButton = document.getElementById('exportButton');
+    if (exportButton) {
+        exportButton.addEventListener('click', () => handleExport(data));
+    }
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => notification.classList.add('show'), 100);
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 function formatHeader(header) {

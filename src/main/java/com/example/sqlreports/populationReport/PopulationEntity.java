@@ -7,10 +7,7 @@ import java.math.BigDecimal;
 
 public class PopulationEntity {
 
-    @Column("name")
     private String name;
-
-    @Column("population")
     private BigDecimal totalPopulation;
 
     public String getName() {

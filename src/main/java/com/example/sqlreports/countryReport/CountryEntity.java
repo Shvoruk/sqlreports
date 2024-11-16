@@ -4,7 +4,6 @@ import org.springframework.data.annotation.Id;
 
 public class CountryEntity {
 
-    @Id
     private String code;
     private String name;
     private String continent;

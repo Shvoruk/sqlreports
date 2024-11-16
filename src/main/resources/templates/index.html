@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>World Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .table-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Population Reports Dashboard</h1>
+        
+        <!-- Navigation -->
+        <div class="mb-8">
+            <select id="reportType" class="p-2 border rounded">
+                <option value="">Select Report Type</option>
+                <option value="capitals">Capital Cities</option>
+                <option value="cities">Cities</option>
+                <option value="countries">Countries</option>
+                <option value="language">Languages</option>
+                <option value="population">Population</option>
+            </select>
+
+            <div id="subOptions" class="mt-4 hidden">
+                <select id="scope" class="p-2 border rounded mr-2">
+                    <option value="world">World</option>
+                    <option value="continent">Continent</option>
+                    <option value="region">Region</option>
+                    <option value="country">Country</option>
+                    <option value="district">District</option>
+                </select>
+
+                <input type="text" id="paramValue" placeholder="Enter parameter value" class="p-2 border rounded mr-2 hidden">
+                
+                <input type="number" id="limit" placeholder="Limit results" class="p-2 border rounded mr-2">
+                
+                <button id="generateReport" class="bg-blue-500 text-white px-4 py-2 rounded">
+                    Generate Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Area -->
+        <div id="results" class="bg-white p-6 rounded shadow">
+            <div id="tableContainer" class="table-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:8080';
+
+        // DOM Elements
+        const reportTypeSelect = document.getElementById('reportType');
+        const subOptions = document.getElementById('subOptions');
+        const scopeSelect = document.getElementById('scope');
+        const paramValueInput = document.getElementById('paramValue');
+        const limitInput = document.getElementById('limit');
+        const generateReportBtn = document.getElementById('generateReport');
+        const tableContainer = document.getElementById('tableContainer');
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            reportTypeSelect.addEventListener('change', handleReportTypeChange);
+            scopeSelect.addEventListener('change', handleScopeChange);
+            generateReportBtn.addEventListener('click', generateReport);
+        });
+
+        // Handle report type selection
+        function handleReportTypeChange(event) {
+            const selectedType = event.target.value;
+            if (selectedType) {
+                subOptions.classList.remove('hidden');
+                updateScopeOptions(selectedType);
+            } else {
+                subOptions.classList.add('hidden');
+            }
+        }
+
+        // Handle scope selection
+        function handleScopeChange(event) {
+            const scope = event.target.value;
+            if (scope === 'world') {
+                paramValueInput.classList.add('hidden');
+            } else {
+                paramValueInput.classList.remove('hidden');
+                paramValueInput.placeholder = `Enter ${scope} name`;
+            }
+        }
+
+        // Update available scopes based on report type
+        function updateScopeOptions(reportType) {
+            scopeSelect.innerHTML = ''; // Clear existing options
+            
+            let options = [];
+            switch(reportType) {
+                case 'capitals':
+                    options = ['world', 'continent', 'region'];
+                    break;
+                case 'cities':
+                    options = ['world', 'continent', 'region', 'country', 'district'];
+                    break;
+                case 'countries':
+                    options = ['world', 'continent', 'region'];
+                    break;
+                case 'language':
+                    document.querySelectorAll('#subOptions .hidden').forEach(el => el.classList.add('hidden'));
+                    return;
+                case 'population':
+                    options = ['world', 'continent', 'region', 'country', 'city', 'district'];
+                    break;
+            }
+
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+                scopeSelect.appendChild(optionElement);
+            });
+        }
+
+        // Generate the report
+        function generateReport() {
+            const reportType = reportTypeSelect.value;
+            const scope = scopeSelect.value;
+            const paramValue = paramValueInput.value;
+            const limit = limitInput.value;
+
+            let url = BASE_URL;
+
+            switch(reportType) {
+                case 'capitals':
+                    url += `/cities/capital/${scope}`;
+                    break;
+                case 'cities':
+                    url += `/cities/${scope}`;
+                    break;
+                case 'countries':
+                    url += `/countries/${scope}`;
+                    break;
+                case 'language':
+                    url += '/language';
+                    break;
+                case 'population':
+                    if (scope === 'world') {
+                        url += '/population/world';
+                    } else {
+                        url += `/population/${scope}`;
+                    }
+                    break;
+            }
+
+            // Add parameters if needed
+            if (scope !== 'world' && reportType !== 'language') {
+                url += `?${scope}=${paramValue}`;
+                if (limit) {
+                    url += `&limit=${limit}`;
+                }
+            } else if (limit && reportType !== 'language') {
+                url += `?limit=${limit}`;
+            }
+
+            // Make API call
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => displayResults(data))
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    tableContainer.innerHTML = '<p class="text-red-500">Error fetching data</p>';
+                });
+        }
+
+        // Display results in a table
+        function displayResults(data) {
+            if (!data || data.length === 0) {
+                tableContainer.innerHTML = '<p>No data available</p>';
+                return;
+            }
+
+            const headers = Object.keys(data[0]);
+            
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            ${headers.map(header => 
+                                `<th>${formatHeader(header)}</th>`
+                            ).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(row => `
+                            <tr>
+                                ${headers.map(header => 
+                                    `<td>${row[header] ?? 'N/A'}</td>`
+                                ).join('')}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        // Format header text
+        function formatHeader(header) {
+            return header
+                .split(/(?=[A-Z])/)
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Countries by Population</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>World Countries by Population</h1>
+        <table id="countriesTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Population</th>
+                </tr>
+            </thead>
+            <tbody id="countriesTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Функция для форматирования числа с разделителями
+        function formatNumber(num) {
+            return num.toLocaleString();
+        }
+
+        // Функция для загрузки данных
+        async function loadCountries() {
+            try {
+                const response = await fetch('http://localhost:8080/countries/world');
+                const data = await response.json();
+                
+                const tableBody = document.getElementById('countriesTableBody');
+                tableBody.innerHTML = ''; // Очищаем текущее содержимое
+
+                // Добавляем каждую страну в таблицу
+                data.forEach(country => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${country.name}</td>
+                        <td>${formatNumber(country.population)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data. Please check if the server is running.');
+            }
+        }
+
+        // Загружаем данные при загрузке страницы
+        window.addEventListener('load', loadCountries);
+    </script>
+</body>
+</html> -->
+

@@ -24,7 +24,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          auth-type: servicePrincipal
+          auth-type: SERVICE_PRINCIPAL
           
       - name: Log in to Azure Container Registry
         run: az acr login --name ${{ secrets.AZURE_REGISTRY_NAME }}
@@ -59,7 +59,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          auth-type: servicePrincipal
+          auth-type: SERVICE_PRINCIPAL
           
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2

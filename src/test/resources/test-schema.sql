@@ -6,5 +6,5 @@ CREATE TABLE country (
     Continent VARCHAR(255),
     Region VARCHAR(255),
     Population INT,
-    Capital INT
+    Capital VARCHAR(255)
 );

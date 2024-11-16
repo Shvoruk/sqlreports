@@ -1,6 +1,5 @@
 package com.example.sqlreports.capitalCityReport;
 
-import com.example.sqlreports.cityReport.CityEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

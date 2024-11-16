@@ -1,6 +1,6 @@
 package com.example.sqlreports.capitalCityReport;
 
-import com.example.sqlreports.cityReport.CityEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

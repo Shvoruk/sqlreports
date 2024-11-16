@@ -1,7 +1,5 @@
 package com.example.sqlreports.countryReport;
 
-import org.springframework.data.annotation.Id;
-
 public class CountryEntity {
 
     private String code;

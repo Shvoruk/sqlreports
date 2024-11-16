@@ -17,7 +17,7 @@ public class CapitalCityController {
     }
 
     @GetMapping("/world")
-    public List<CityEntity> getCitiesInWorld(@RequestParam(required = false) Integer limit) {
+    public List<CapitalCityEntity> getCitiesInWorld(@RequestParam(required = false) Integer limit) {
         if(limit != null){
             return capitalCityService.getAllCapitalCitiesInWorldLimited(limit);
         }
@@ -25,7 +25,7 @@ public class CapitalCityController {
     }
 
     @GetMapping("/continent")
-    public List<CityEntity> getCitiesInContinent(@RequestParam String continent, @RequestParam(required = false) Integer limit) {
+    public List<CapitalCityEntity> getCitiesInContinent(@RequestParam String continent, @RequestParam(required = false) Integer limit) {
         if(limit != null){
             return capitalCityService.getAllCapitalCitiesInContinentLimited(continent, limit);
         }
@@ -33,7 +33,7 @@ public class CapitalCityController {
     }
 
     @GetMapping("/region")
-    public List<CityEntity> getCitiesInRegion(@RequestParam String region, @RequestParam(required = false) Integer limit) {
+    public List<CapitalCityEntity> getCitiesInRegion(@RequestParam String region, @RequestParam(required = false) Integer limit) {
         if(limit != null){
             return capitalCityService.getAllCapitalCitiesInRegionLimited(region, limit);
         }

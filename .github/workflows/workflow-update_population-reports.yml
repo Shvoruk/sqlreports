@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy WAR app to Azure Web App - population-reports
+name: Workflow for deployment
 
 on:
   push:
@@ -10,42 +7,99 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+
+  UnitTests:
+    name: Unit Tests
+    runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Set up Java version
-        uses: actions/setup-java@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'microsoft'
+          distribution: 'adopt'
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Run Unit Tests
+        env:
+          SPRING_PROFILES_ACTIVE: test
+        run: mvn test
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+  IntegrationTests:
+    name: Integration Tests with MySQL
+    runs-on: ubuntu-20.04
+    needs: UnitTests
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
+    services:
+      db:
+        image: mysql:8.3
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: world
+        ports:
+          - 3306:3306
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
         with:
-          name: java-app
-      
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Wait for Database
+        run: sleep 30
+
+      - name: Run Integration Tests
+        env:
+          SPRING_PROFILES_ACTIVE: integration
+        run: mvn verify
+
+  BuildAndPushDockerImages:
+    name: Build and Push Docker Images to ACR
+    runs-on: ubuntu-20.04
+    needs: [UnitTests, IntegrationTests]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CD51EE9EFDC242EF8AA601E8235B3A36 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F3F8E7D5943A47DE8892A03983CD0394 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C65B075CAA1140F3B5660ADC139A0572 }}
+
+      - name: Log in to Azure Container Registry
+        run: az acr login --name ${{ secrets.AZURE_REGISTRY_NAME }}
+
+      - name: Update Docker Compose for ACR
+        run: |
+          # Replace image names with ACR references in docker-compose.yml
+          sed -i 's|sql_reports|${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/sql_reports:latest|g' docker-compose.yml
+          sed -i 's|world_db|${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/world_db:latest|g' docker-compose.yml
+
+      - name: Build and Tag Docker Images with Docker Compose
+        run: docker-compose -f docker-compose.yml build
+
+      - name: Push Docker Images to ACR
+        run: docker-compose -f docker-compose.yml push
+
+  DeployToAzure:
+    name: Deploy to Azure Web App
+    runs-on: ubuntu-20.04
+    needs: BuildAndPushDockerImages
+    environment:
+      name: 'Production'
+    permissions:
+      id-token: write
+
+    steps:
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -54,10 +108,11 @@ jobs:
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C65B075CAA1140F3B5660ADC139A0572 }}
 
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'population-reports'
-          slot-name: 'Production'
-          package: '*.war'
+          images: |
+            ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/sql_reports:latest
+            ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/world_db:latest
+
           

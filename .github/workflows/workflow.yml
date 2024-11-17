@@ -25,6 +25,9 @@ jobs:
       - name: Run Unit Tests
         env:
           SPRING_PROFILES_ACTIVE: test
+          TEST_DB_URL: ${TEST_DB_URL}
+          TEST_DB_USERNAME: ${TEST_DB_USERNAME}
+          TEST_DB_PASSWORD: ${TEST_DB_PASSWORD}
         run: mvn test
 
   integration-tests:

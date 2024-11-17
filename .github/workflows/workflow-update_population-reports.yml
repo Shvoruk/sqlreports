@@ -1,72 +1,45 @@
-name: Workflow for deployment
+name: Deploy Multi-Container App to Azure
 
 on:
   push:
     branches:
-      - workflow-update
-  workflow_dispatch:
+      - workflow-update  # Adjust branch if needed
 
 jobs:
-  BuildAndPushDockerImages:
-    name: Build and Push Docker Images to ACR
-    runs-on: ubuntu-20.04
-    permissions:
-      id-token: write
-      contents: read
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          auth-type: SERVICE_PRINCIPAL
-          
-      - name: Log in to Azure Container Registry
-        run: az acr login --name ${{ secrets.AZURE_REGISTRY_NAME }}
+    - name: Log in to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: oleksiicr.azurecr.io  
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+        
+    - name: Build and Push Database Image
+      run: |
+        docker-compose -f docker-compose.yml build db
+        docker-compose -f docker-compose.yml push db
+        
+    - name: Build and Push App Image
+      run: |
+        docker-compose -f docker-compose.yml build app
+        docker-compose -f docker-compose.yml push app
 
-      - name: Update Docker Compose for ACR
-        run: |
-          # Replace image names with ACR references in docker-compose.yml
-          sed -i 's|sql_reports|${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/sql_reports:latest|g' docker-compose.yml
-          sed -i 's|world_db|${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/world_db:latest|g' docker-compose.yml
-
-      - name: Build and Tag Docker Images with Docker Compose
-        run: docker-compose -f docker-compose.yml build
-
-      - name: Push Docker Images to ACR
-        run: docker-compose -f docker-compose.yml push
-
-  DeployToAzure:
-    name: Deploy to Azure Web App
-    runs-on: ubuntu-20.04
-    needs: BuildAndPushDockerImages
-    environment:
-      name: 'Production'
-    permissions:
-      id-token: write
-      contents: read
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: population-reports  
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        images: |
+          oleksiicr.azurecr.io/app-image:latest
+          oleksiicr.azurecr.io/db-image:latest
 
 
-    steps:
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          auth-type: SERVICE_PRINCIPAL
-          
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'population-reports'
-          images: |
-            ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/sql_reports:latest
-            ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/world_db:latest
+
 
           

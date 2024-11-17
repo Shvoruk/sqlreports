@@ -5,6 +5,11 @@ services:
     build: .
     image: oleksiicr.azurecr.io/sql_reports:latest  # Add image tag for ACR
     container_name: sql_reports
+    environment:
+      MYSQL_URL: ${MYSQL_URL}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "8080:8080"
     depends_on:

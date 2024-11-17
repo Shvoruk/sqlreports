@@ -22,13 +22,13 @@ jobs:
         
     - name: Build and Push Database Image
       run: |
-        docker-compose -f docker-compose.yml build db
-        docker-compose -f docker-compose.yml push db
+        docker compose -f docker-compose.yml build db
+        docker compose -f docker-compose.yml push db
         
     - name: Build and Push App Image
       run: |
-        docker-compose -f docker-compose.yml build app
-        docker-compose -f docker-compose.yml push app
+        docker compose -f docker-compose.yml build app
+        docker compose -f docker-compose.yml push app
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2

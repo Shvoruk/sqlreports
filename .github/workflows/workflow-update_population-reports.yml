@@ -3,7 +3,7 @@ name: Deploy Multi-Container App to Azure
 on:
   push:
     branches:
-      - workflow-update  # Adjust branch if needed
+      - feature/deploy-fix  # Adjust branch if needed
 
 jobs:
   build-and-deploy:

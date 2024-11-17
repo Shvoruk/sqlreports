@@ -3,7 +3,13 @@ services:
 
   app:
     build: .
+    image: oleksiicr.azurecr.io/sql_reports:latest  # Add image tag for ACR
     container_name: sql_reports
+    environment:
+      MYSQL_URL: ${MYSQL_URL}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "8080:8080"
     depends_on:
@@ -13,7 +19,13 @@ services:
 
   db:
     build: db/.
+    image: oleksiicr.azurecr.io/world_db:latest  # Add image tag for ACR
     container_name: world_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     networks:
@@ -22,4 +34,3 @@ services:
 networks:
   custom_network:
     driver: bridge
-

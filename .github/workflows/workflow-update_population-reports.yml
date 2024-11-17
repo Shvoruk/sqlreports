@@ -19,16 +19,11 @@ jobs:
         login-server: oleksiicr.azurecr.io  
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
-        
-    - name: Build and Push Database Image
+
+    - name: Build and Push Images
       run: |
-        docker compose -f docker-compose.yml build db
-        docker compose -f docker-compose.yml push db
-        
-    - name: Build and Push App Image
-      run: |
-        docker compose -f docker-compose.yml build app
-        docker compose -f docker-compose.yml push app
+        docker compose -f docker-compose.yml build
+        docker compose -f docker-compose.yml push
 
 
 

@@ -30,16 +30,6 @@ jobs:
         docker compose -f docker-compose.yml build app
         docker compose -f docker-compose.yml push app
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: population-reports  
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        images: |
-          oleksiicr.azurecr.io/sqlreports-app:latest
-          oleksiicr.azurecr.io/sqlreports-db:latest
-
-
 
 
           

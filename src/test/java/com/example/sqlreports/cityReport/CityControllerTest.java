@@ -55,11 +55,11 @@ class CityControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].name").value("City1"))
-                .andExpect(jsonPath("$[0].countryCode").value("C1"))
+                .andExpect(jsonPath("$[0].country").value("C1"))
                 .andExpect(jsonPath("$[0].district").value("District1"))
                 .andExpect(jsonPath("$[0].population").value(100000))
                 .andExpect(jsonPath("$[1].name").value("City2"))
-                .andExpect(jsonPath("$[1].countryCode").value("C2"))
+                .andExpect(jsonPath("$[1].country").value("C2"))
                 .andExpect(jsonPath("$[1].district").value("District2"))
                 .andExpect(jsonPath("$[1].population").value(200000));
     }

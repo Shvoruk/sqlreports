@@ -59,7 +59,7 @@ jobs:
       - name: Run Integration Tests
         env:
           SPRING_PROFILES_ACTIVE: integration
-        run: mvn verify
+        run: mvn test verify
 
   build-and-deploy:
     name: Build and Deploy

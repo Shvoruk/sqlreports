@@ -15,7 +15,7 @@ services:
     build: db/.
     container_name: world_db
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - custom_network
 

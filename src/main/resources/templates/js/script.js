@@ -23,6 +23,7 @@ function initializeEventListeners() {
     const reportTypeSelect = document.getElementById('reportType');
     const scopeSelect = document.getElementById('scope');
     const generateReportBtn = document.getElementById('generateReport');
+    const generateFilteredReportBtn = document.getElementById('generateFilteredReport');
 
     if (reportTypeSelect) {
         reportTypeSelect.addEventListener('change', handleReportTypeChange);
@@ -32,6 +33,9 @@ function initializeEventListeners() {
     }
     if (generateReportBtn) {
         generateReportBtn.addEventListener('click', generateReport);
+    }
+    if (generateFilteredReportBtn) {
+        generateFilteredReportBtn.addEventListener('click', generateFilteredPopulationReport);
     }
 }
 
@@ -52,13 +56,118 @@ const limitInput = document.getElementById('limit');
 const generateReportBtn = document.getElementById('generateReport');
 const tableContainer = document.getElementById('tableContainer');
 
+// function handleReportTypeChange(event) {
+//     const selectedType = event.target.value;
+//     if (selectedType) {
+//         subOptions.classList.remove('hidden');
+//         updateScopeOptions(selectedType);
+//     } else {
+//         subOptions.classList.add('hidden');
+//     }
+// }
 function handleReportTypeChange(event) {
     const selectedType = event.target.value;
-    if (selectedType) {
-        subOptions.classList.remove('hidden');
-        updateScopeOptions(selectedType);
+    const filteredOptions = document.getElementById('filteredOptions');
+    const regularOptions = document.getElementById('subOptions');
+
+    if (selectedType === 'population-filtered') {
+        filteredOptions.classList.remove('hidden');
+        regularOptions.classList.add('hidden');
+        updateFilteredScopeOptions();
+        // Clear fields
+        if (paramValueInput) paramValueInput.value = '';
+        if (limitInput) limitInput.value = '';
     } else {
-        subOptions.classList.add('hidden');
+        filteredOptions.classList.add('hidden');
+        regularOptions.classList.remove('hidden');
+        updateScopeOptions(selectedType);
+    }
+}
+
+//
+function updateFilteredScopeOptions() {
+    const scopeSelect = document.getElementById('filteredScope');
+    scopeSelect.innerHTML = '';
+
+    const options = ['continent', 'region', 'country'];
+
+    options.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option;
+        optionElement.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+        scopeSelect.appendChild(optionElement);
+    });
+}
+
+//
+function generateFilteredPopulationReport() {
+    const scope = document.getElementById('filteredScope').value;
+    const url = `${BASE_URL}/population/${scope}/filtered`;
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => displayFilteredResults(data, scope))
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            tableContainer.innerHTML = '<p class="text-red-500">Error fetching data</p>';
+        });
+}
+
+//
+function displayFilteredResults(data, scope) {
+    if (!data || data.length === 0) {
+        tableContainer.innerHTML = '<p>No data available</p>';
+        return;
+    }
+
+    const scopeTitle = scope.charAt(0).toUpperCase() + scope.slice(1);
+    const resultsHTML = `
+        <div class="results-header">
+            <h3>Population Report by ${scopeTitle} (${data.length} entries)</h3>
+            <button id="exportButton" class="export-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Export CSV
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>${scopeTitle}</th>
+                    <th>Total Population</th>
+                    <th>City Population</th>
+                    <th>City Population %</th>
+                    <th>Rural Population</th>
+                    <th>Rural Population %</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.map(row => `
+                    <tr>
+                        <td>${row[scope]}</td>
+                        <td>${row.totalPopulation?.toLocaleString() ?? 'N/A'}</td>
+                        <td>${row.cityPopulation?.toLocaleString() ?? 'N/A'}</td>
+                        <td>${row.cityPercentage ?? 'N/A'}</td>
+                        <td>${row.ruralPopulation?.toLocaleString() ?? 'N/A'}</td>
+                        <td>${row.ruralPercentage ?? 'N/A'}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+    tableContainer.innerHTML = resultsHTML;
+
+    const exportButton = document.getElementById('exportButton');
+    if (exportButton) {
+        exportButton.addEventListener('click', () => handleExport(data));
     }
 }
 
@@ -104,6 +213,13 @@ function updateScopeOptions(reportType) {
 
 function generateReport() {
     const reportType = reportTypeSelect.value;
+
+    //
+    if (reportType === 'population-filtered') {
+        generateFilteredPopulationReport();
+        return;
+    }
+
     const scope = scopeSelect.value;
     const paramValue = paramValueInput.value;
     const limit = limitInput.value;
@@ -162,7 +278,9 @@ function handleExport(data) {
     }
 
     const reportType = document.getElementById('reportType').value;
-    const scope = document.getElementById('scope').value;
+    const scope = reportType === 'population-filtered'
+        ? document.getElementById('filteredScope').value
+        : document.getElementById('scope').value;
     const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
     const fileName = `${reportType}-${scope}-${timestamp}.csv`;
 

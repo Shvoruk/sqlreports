@@ -1,4 +1,4 @@
-name: workflow for develop branch
+name: workflow for unit testing branch
 
 on:
   push:

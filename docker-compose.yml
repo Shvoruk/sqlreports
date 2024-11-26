@@ -5,8 +5,8 @@ services:
     build: .
     container_name: sql_reports
     environment:
-      MYSQL_URL: ${MYSQL_URL}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_URL: jdbc:mysql://db:3306/world
+      MYSQL_DATABASE: world
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
@@ -21,7 +21,7 @@ services:
     container_name: world_db
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_DATABASE: world
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:

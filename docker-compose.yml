@@ -3,7 +3,6 @@ services:
 
   app:
     build: .
-    image: oleksiicr.azurecr.io/sql_reports:latest  # Add image tag for ACR
     container_name: sql_reports
     environment:
       MYSQL_URL: ${MYSQL_URL}
@@ -19,7 +18,6 @@ services:
 
   db:
     build: db/.
-    image: oleksiicr.azurecr.io/world_db:latest  # Add image tag for ACR
     container_name: world_db
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}

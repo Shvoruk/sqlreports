@@ -7,8 +7,8 @@ services:
     environment:
       MYSQL_URL: jdbc:mysql://db:3306/world
       MYSQL_DATABASE: world
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
       - "8080:8080"
     depends_on:
@@ -20,10 +20,10 @@ services:
     build: db/.
     container_name: world_db
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: world
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
     networks:

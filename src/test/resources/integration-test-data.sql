@@ -1,3 +1,5 @@
+-- src/test/resources/test-data.sql
+
 INSERT INTO country (Code, Name, Continent, Region, Population, Capital) VALUES
 ('USA', 'United States', 'North America', 'Americas', 331002651, '1'),
 ('CAN', 'Canada', 'North America', 'Americas', 37742154, '2'),

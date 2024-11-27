@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - feature/codecov
 jobs:
 
   unit-tests:
@@ -52,7 +51,12 @@ jobs:
       - name: Run Integration Tests
         env:
           SPRING_PROFILES_ACTIVE: integration
-        run: mvn verify
+        run: mvn clean verify
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   Build:
     name: Build and Run with Docker Compose

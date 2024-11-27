@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature/codecov
 jobs:
 
   unit-tests:
@@ -24,6 +25,11 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: test
         run: mvn test
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   integration-tests:
     name: Integration Tests with MySQL

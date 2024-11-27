@@ -17,6 +17,4 @@ public interface LanguageRepository extends CrudRepository <LanguageEntity, Stri
             "GROUP BY cl.Language\n" +
             "ORDER BY speakers DESC")
     List<LanguageEntity> findLanguageSpeakersPercentage();
-
-
 }

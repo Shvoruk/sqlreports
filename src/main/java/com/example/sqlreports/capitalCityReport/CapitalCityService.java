@@ -1,6 +1,5 @@
 package com.example.sqlreports.capitalCityReport;
 
-import com.example.sqlreports.cityReport.CityEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,27 +13,27 @@ public class CapitalCityService {
         this.capitalCityRepository = capitalCityRepository;
     }
 
-    public List<CityEntity> getAllCapitalCitiesInWorld() {
+    public List<CapitalCityEntity> getAllCapitalCitiesInWorld() {
         return capitalCityRepository.findAllCapitalCitiesByWorldOrderedByPopulation();
     }
 
-    public List<CityEntity> getAllCapitalCitiesInContinent(String continent) {
+    public List<CapitalCityEntity> getAllCapitalCitiesInContinent(String continent) {
         return capitalCityRepository.findAllCapitalCitiesByContinentOrderedByPopulation(continent);
     }
 
-    public List<CityEntity> getAllCapitalCitiesInRegion(String region) {
+    public List<CapitalCityEntity> getAllCapitalCitiesInRegion(String region) {
         return capitalCityRepository.findAllCapitalCitiesByRegionOrderedByPopulation(region);
     }
 
-    public List<CityEntity> getAllCapitalCitiesInWorldLimited(Integer limit) {
+    public List<CapitalCityEntity> getAllCapitalCitiesInWorldLimited(Integer limit) {
         return capitalCityRepository.findAllCapitalCitiesWithLimitByWorldOrderedByPopulation(limit);
     }
 
-    public List<CityEntity> getAllCapitalCitiesInContinentLimited(String continent, Integer limit) {
+    public List<CapitalCityEntity> getAllCapitalCitiesInContinentLimited(String continent, Integer limit) {
         return capitalCityRepository.findAllCapitalCitiesWithLimitByContinentOrderedByPopulation(continent, limit);
     }
 
-    public List<CityEntity> getAllCapitalCitiesInRegionLimited(String region, Integer limit) {
+    public List<CapitalCityEntity> getAllCapitalCitiesInRegionLimited(String region, Integer limit) {
         return capitalCityRepository.findAllCapitalCitiesWithLimitByRegionOrderedByPopulation(region, limit);
     }
 

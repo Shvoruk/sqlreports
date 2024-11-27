@@ -33,16 +33,14 @@ class CityControllerTest {
     void setUp() {
         // Set up mock city data
         CityEntity city1 = new CityEntity();
-        city1.setId(1);
         city1.setName("City1");
-        city1.setCountryCode("C1");
+        city1.setCountry("C1");
         city1.setDistrict("District1");
         city1.setPopulation(100000);
 
         CityEntity city2 = new CityEntity();
-        city2.setId(2);
         city2.setName("City2");
-        city2.setCountryCode("C2");
+        city2.setCountry("C2");
         city2.setDistrict("District2");
         city2.setPopulation(200000);
 
@@ -56,14 +54,12 @@ class CityControllerTest {
         mockMvc.perform(get("/cities/world"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("City1"))
-                .andExpect(jsonPath("$[0].countryCode").value("C1"))
+                .andExpect(jsonPath("$[0].country").value("C1"))
                 .andExpect(jsonPath("$[0].district").value("District1"))
                 .andExpect(jsonPath("$[0].population").value(100000))
-                .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("City2"))
-                .andExpect(jsonPath("$[1].countryCode").value("C2"))
+                .andExpect(jsonPath("$[1].country").value("C2"))
                 .andExpect(jsonPath("$[1].district").value("District2"))
                 .andExpect(jsonPath("$[1].population").value(200000));
     }

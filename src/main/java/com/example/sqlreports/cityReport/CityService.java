@@ -52,6 +52,4 @@ public class CityService {
     public List<CityEntity> getAllCitiesInDistrictLimited(String district, Integer limit) {
         return cityRepository.findCitiesWithLimitByDistrictOrderedByPopulation(district, limit);
     }
-
-
 }

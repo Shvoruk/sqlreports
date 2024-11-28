@@ -36,6 +36,4 @@ public class CapitalCityService {
     public List<CapitalCityEntity> getAllCapitalCitiesInRegionLimited(String region, Integer limit) {
         return capitalCityRepository.findAllCapitalCitiesWithLimitByRegionOrderedByPopulation(region, limit);
     }
-
-
 }

@@ -1,34 +1,49 @@
 package com.example.sqlreports.countryReport;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CountryEntityTest {
 
     @Test
-    void testCountryEntityGettersAndSetters() {
+    void testCountryEntitySettersAndGetters() {
         CountryEntity country = new CountryEntity();
 
-        String code = "C1";
-        String name = "Country1";
-        String continent = "Continent1";
-        String region = "Region1";
-        Integer population = 5000000;
-        Integer capital = 100;
+        // Test the code property
+        country.setCode("US");
+        assertEquals("US", country.getCode());
 
-        country.setCode(code);
-        country.setName(name);
-        country.setContinent(continent);
-        country.setRegion(region);
-        country.setPopulation(population);
-        country.setCapital(capital);
+        // Test the name property
+        country.setName("United States");
+        assertEquals("United States", country.getName());
 
-        assertEquals(code, country.getCode());
-        assertEquals(name, country.getName());
-        assertEquals(continent, country.getContinent());
-        assertEquals(region, country.getRegion());
-        assertEquals(population, country.getPopulation());
-        assertEquals(capital, country.getCapital());
+        // Test the continent property
+        country.setContinent("North America");
+        assertEquals("North America", country.getContinent());
+
+        // Test the region property
+        country.setRegion("Northern America");
+        assertEquals("Northern America", country.getRegion());
+
+        // Test the population property
+        country.setPopulation(331000000);
+        assertEquals(331000000, country.getPopulation());
+
+        // Test the capital property
+        country.setCapital("Washington, D.C.");
+        assertEquals("Washington, D.C.", country.getCapital());
+    }
+
+    @Test
+    void testCountryEntityDefaultValues() {
+        CountryEntity country = new CountryEntity();
+
+        // Test default values (should be null for strings and Integer)
+        assertNull(country.getCode());
+        assertNull(country.getName());
+        assertNull(country.getContinent());
+        assertNull(country.getRegion());
+        assertNull(country.getPopulation());
+        assertNull(country.getCapital());
     }
 }

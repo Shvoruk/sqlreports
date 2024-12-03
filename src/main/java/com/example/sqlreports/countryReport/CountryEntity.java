@@ -1,7 +1,5 @@
 package com.example.sqlreports.countryReport;
 
-import org.springframework.data.annotation.Id;
-
 public class CountryEntity {
 
     private String code;
@@ -9,7 +7,7 @@ public class CountryEntity {
     private String continent;
     private String region;
     private Integer population;
-    private Integer capital;
+    private String capital;
 
     public String getCode() {
         return code;
@@ -51,11 +49,11 @@ public class CountryEntity {
         this.population = population;
     }
 
-    public Integer getCapital() {
+    public String getCapital() {
         return capital;
     }
 
-    public void setCapital(Integer capital) {
+    public void setCapital(String capital) {
         this.capital = capital;
     }
 }

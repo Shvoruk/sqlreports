@@ -2,106 +2,161 @@ package com.example.sqlreports.countryReport;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CountryServiceTest {
+
+    private CountryService countryService;
 
     @Mock
     private CountryRepository countryRepository;
 
-    @InjectMocks
-    private CountryService countryService;
-
-    private List<CountryEntity> mockCountries;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-
-        CountryEntity country1 = new CountryEntity();
-        country1.setCode("C1");
-        country1.setName("Country1");
-        country1.setContinent("Continent1");
-        country1.setRegion("Region1");
-        country1.setPopulation(5000000);
-        country1.setCapital(1);
-
-        CountryEntity country2 = new CountryEntity();
-        country2.setCode("C2");
-        country2.setName("Country2");
-        country2.setContinent("Continent2");
-        country2.setRegion("Region2");
-        country2.setPopulation(10000000);
-        country2.setCapital(2);
-
-        mockCountries = List.of(country1, country2);
+        countryService = new CountryService(countryRepository);
     }
 
     @Test
     void testGetAllCountriesInWorld() {
+        List<CountryEntity> mockCountries = Arrays.asList(
+                new CountryEntity() {{
+                    setName("United States");
+                    setPopulation(331000000);
+                }},
+                new CountryEntity() {{
+                    setName("Canada");
+                    setPopulation(38000000);
+                }}
+        );
+
         when(countryRepository.findAllCountriesByWorldOrderedByPopulation()).thenReturn(mockCountries);
 
         List<CountryEntity> result = countryService.getAllCountriesInWorld();
 
-        assertEquals(mockCountries, result);
-        verify(countryRepository).findAllCountriesByWorldOrderedByPopulation();
+        assertEquals(2, result.size());
+        assertEquals("United States", result.get(0).getName());
+        assertEquals("Canada", result.get(1).getName());
+
+        verify(countryRepository, times(1)).findAllCountriesByWorldOrderedByPopulation();
     }
 
     @Test
     void testGetAllCountriesInContinent() {
-        when(countryRepository.findCountriesByContinentOrderedByPopulation("Continent1")).thenReturn(mockCountries);
+        String continent = "North America";
+        List<CountryEntity> mockCountries = Arrays.asList(
+                new CountryEntity() {{
+                    setName("United States");
+                    setPopulation(331000000);
+                }},
+                new CountryEntity() {{
+                    setName("Canada");
+                    setPopulation(38000000);
+                }}
+        );
 
-        List<CountryEntity> result = countryService.getAllCountriesInContinent("Continent1");
+        when(countryRepository.findCountriesByContinentOrderedByPopulation(continent)).thenReturn(mockCountries);
 
-        assertEquals(mockCountries, result);
-        verify(countryRepository).findCountriesByContinentOrderedByPopulation("Continent1");
+        List<CountryEntity> result = countryService.getAllCountriesInContinent(continent);
+
+        assertEquals(2, result.size());
+        assertEquals("United States", result.get(0).getName());
+        assertEquals("Canada", result.get(1).getName());
+
+        verify(countryRepository, times(1)).findCountriesByContinentOrderedByPopulation(continent);
     }
 
     @Test
     void testGetAllCountriesInRegion() {
-        when(countryRepository.findCountriesByRegionOrderedByPopulation("Region1")).thenReturn(mockCountries);
+        String region = "Northern America";
+        List<CountryEntity> mockCountries = Arrays.asList(
+                new CountryEntity() {{
+                    setName("United States");
+                    setPopulation(331000000);
+                }},
+                new CountryEntity() {{
+                    setName("Canada");
+                    setPopulation(38000000);
+                }}
+        );
 
-        List<CountryEntity> result = countryService.getAllCountriesInRegion("Region1");
+        when(countryRepository.findCountriesByRegionOrderedByPopulation(region)).thenReturn(mockCountries);
 
-        assertEquals(mockCountries, result);
-        verify(countryRepository).findCountriesByRegionOrderedByPopulation("Region1");
+        List<CountryEntity> result = countryService.getAllCountriesInRegion(region);
+
+        assertEquals(2, result.size());
+        assertEquals("United States", result.get(0).getName());
+        assertEquals("Canada", result.get(1).getName());
+
+        verify(countryRepository, times(1)).findCountriesByRegionOrderedByPopulation(region);
     }
 
     @Test
     void testGetAllCountriesInWorldLimited() {
-        when(countryRepository.findAllCountriesWithLimitByWorldOrderedByPopulation(2)).thenReturn(mockCountries);
+        int limit = 1;
+        List<CountryEntity> mockCountries = Arrays.asList(
+                new CountryEntity() {{
+                    setName("United States");
+                    setPopulation(331000000);
+                }}
+        );
 
-        List<CountryEntity> result = countryService.getAllCountriesInWorldLimited(2);
+        when(countryRepository.findAllCountriesWithLimitByWorldOrderedByPopulation(limit)).thenReturn(mockCountries);
 
-        assertEquals(mockCountries, result);
-        verify(countryRepository).findAllCountriesWithLimitByWorldOrderedByPopulation(2);
+        List<CountryEntity> result = countryService.getAllCountriesInWorldLimited(limit);
+
+        assertEquals(1, result.size());
+        assertEquals("United States", result.get(0).getName());
+
+        verify(countryRepository, times(1)).findAllCountriesWithLimitByWorldOrderedByPopulation(limit);
     }
 
     @Test
     void testGetAllCountriesInContinentLimited() {
-        when(countryRepository.findCountriesWithLimitByContinentOrderedByPopulation("Continent1", 1)).thenReturn(List.of(mockCountries.get(0)));
+        String continent = "North America";
+        int limit = 1;
+        List<CountryEntity> mockCountries = Arrays.asList(
+                new CountryEntity() {{
+                    setName("United States");
+                    setPopulation(331000000);
+                }}
+        );
 
-        List<CountryEntity> result = countryService.getAllCountriesInContinentLimited("Continent1", 1);
+        when(countryRepository.findCountriesWithLimitByContinentOrderedByPopulation(continent, limit)).thenReturn(mockCountries);
 
-        assertEquals(List.of(mockCountries.get(0)), result);
-        verify(countryRepository).findCountriesWithLimitByContinentOrderedByPopulation("Continent1", 1);
+        List<CountryEntity> result = countryService.getAllCountriesInContinentLimited(continent, limit);
+
+        assertEquals(1, result.size());
+        assertEquals("United States", result.get(0).getName());
+
+        verify(countryRepository, times(1)).findCountriesWithLimitByContinentOrderedByPopulation(continent, limit);
     }
 
     @Test
     void testGetAllCountriesInRegionLimited() {
-        when(countryRepository.findCountriesWithLimitByRegionOrderedByPopulation("Region1", 1)).thenReturn(List.of(mockCountries.get(0)));
+        String region = "Northern America";
+        int limit = 1;
+        List<CountryEntity> mockCountries = Arrays.asList(
+                new CountryEntity() {{
+                    setName("United States");
+                    setPopulation(331000000);
+                }}
+        );
 
-        List<CountryEntity> result = countryService.getAllCountriesInRegionLimited("Region1", 1);
+        when(countryRepository.findCountriesWithLimitByRegionOrderedByPopulation(region, limit)).thenReturn(mockCountries);
 
-        assertEquals(List.of(mockCountries.get(0)), result);
-        verify(countryRepository).findCountriesWithLimitByRegionOrderedByPopulation("Region1", 1);
+        List<CountryEntity> result = countryService.getAllCountriesInRegionLimited(region, limit);
+
+        assertEquals(1, result.size());
+        assertEquals("United States", result.get(0).getName());
+
+        verify(countryRepository, times(1)).findCountriesWithLimitByRegionOrderedByPopulation(region, limit);
     }
 }

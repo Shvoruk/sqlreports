@@ -1,10 +1,9 @@
-package com.example.sqlreports.cityReport;
+package com.example.sqlreports.capitalCityReport;
 
-public class CityEntity {
+public class CapitalCityEntity {
 
     private String name;
     private String country;
-    private String district;
     private Integer population;
 
 
@@ -24,14 +23,6 @@ public class CityEntity {
         this.country = country;
     }
 
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
     public Integer getPopulation() {
         return population;
     }
@@ -40,3 +31,4 @@ public class CityEntity {
         this.population = population;
     }
 }
+

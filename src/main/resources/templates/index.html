@@ -1,80 +1,342 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>World Reports</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="../static/styles.css" rel="stylesheet">
     <style>
+        :root {
+            /* Light theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f2f2f2;
+            --text-primary: #2e3338;
+            --text-secondary: #747f8d;
+            --border-color: #e3e5e8;
+            --header-bg: #f8f9f9;
+            --select-bg: #ffffff;
+            --button-bg: #5865f2;
+            --button-hover: #4752c4;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #36393f;
+            --bg-secondary: #2f3136;
+            --text-primary: #dcddde;
+            --text-secondary: #b9bbbe;
+            --border-color: #202225;
+            --header-bg: #202225;
+            --select-bg: #40444b;
+            --button-bg: #5865f2;
+            --button-hover: #4752c4;
+        }
+
+        body {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background-color: var(--button-bg);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--button-hover);
+        }
+
+        .dashboard-container {
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
         .table-container {
             max-height: 600px;
             overflow-y: auto;
+            border-radius: 8px;
+            background-color: var(--bg-primary);
         }
+
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
             text-align: left;
         }
+
         th {
-            background-color: #f2f2f2;
+            background-color: var(--header-bg);
+            color: var(--text-primary);
+            font-weight: 600;
             position: sticky;
             top: 0;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+
+        tr:hover {
+            background-color: var(--bg-secondary);
         }
+
+        select, input {
+            background-color: var(--select-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--button-bg);
+        }
+
+        .generate-button {
+            background-color: var(--button-bg);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .generate-button:hover {
+            background-color: var(--button-hover);
+        }
+
         .hidden {
             display: none;
         }
+
+
+        /*export*/
+        .export-button {
+            background-color: var(--button-bg);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-button:hover {
+            background-color: var(--button-hover);
+        }
+
+        .export-button:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .export-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
     </style>
 </head>
-<body class="bg-gray-100 p-8">
+<body class="p-8">
+    <button class="theme-toggle">Toggle Theme</button>
+    
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8">Population Reports Dashboard</h1>
+        <h1 class="text-3xl font-bold mb-8">World Reports Dashboard</h1>
         
-        <!-- Navigation -->
-        <div class="mb-8">
-            <select id="reportType" class="p-2 border rounded">
-                <option value="">Select Report Type</option>
-                <option value="capitals">Capital Cities</option>
-                <option value="cities">Cities</option>
-                <option value="countries">Countries</option>
-                <option value="language">Languages</option>
-                <option value="population">Population</option>
-            </select>
-
-            <div id="subOptions" class="mt-4 hidden">
-                <select id="scope" class="p-2 border rounded mr-2">
-                    <option value="world">World</option>
-                    <option value="continent">Continent</option>
-                    <option value="region">Region</option>
-                    <option value="country">Country</option>
-                    <option value="district">District</option>
+        <div class="dashboard-container p-6 mb-8">
+            <div class="mb-8">
+                <select id="reportType" class="mr-2">
+                    <option value="">Select Report Type</option>
+                    <option value="capitals">Capital Cities</option>
+                    <option value="cities">Cities</option>
+                    <option value="countries">Countries</option>
+                    <option value="language">Languages</option>
+                    <option value="population">Population</option>
+                    <option value="population-filtered">Population (Filtered)</option>
                 </select>
 
-                <input type="text" id="paramValue" placeholder="Enter parameter value" class="p-2 border rounded mr-2 hidden">
-                
-                <input type="number" id="limit" placeholder="Limit results" class="p-2 border rounded mr-2">
-                
-                <button id="generateReport" class="bg-blue-500 text-white px-4 py-2 rounded">
-                    Generate Report
-                </button>
-            </div>
-        </div>
+                <!-- Regular options -->
+                <div id="subOptions" class="mt-4 hidden">
+                    <select id="scope" class="mr-2">
+                        <option value="world">World</option>
+                        <option value="continent">Continent</option>
+                        <option value="region">Region</option>
+                        <option value="country">Country</option>
+                        <option value="district">District</option>
+                    </select>
 
-        <!-- Results Area -->
-        <div id="results" class="bg-white p-6 rounded shadow">
-            <div id="tableContainer" class="table-container"></div>
+                    <input type="text" id="paramValue" placeholder="Enter parameter value" class="mr-2 hidden">
+                    
+                    <input type="number" id="limit" placeholder="Limit results" class="mr-2">
+                    
+                    <button id="generateReport" class="generate-button">
+                        Generate Report
+                    </button>
+                </div>
+
+                <!-- Filtered options -->
+                <div id="filteredOptions" class="mt-4 hidden">
+                    <select id="filteredScope" class="mr-2">
+                        <option value="continent">Continent</option>
+                        <option value="region">Region</option>
+                        <option value="country">Country</option>
+                    </select>
+                    
+                    <button id="generateFilteredReport" class="generate-button">
+                        Generate Filtered Report
+                    </button>
+                </div>
+            </div>
+
+            <div id="results">
+                <div id="tableContainer" class="table-container"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        const BASE_URL = 'https://population-reports-bhehbbbsd5fdche9.ukwest-01.azurewebsites.net';
+        function convertToCSV(data) {
+            if (!data || !data.length) return '';
 
-        // DOM Elements
+            const headers = Object.keys(data[0]);
+
+            const headerRow = headers.map(header => {
+                const escaped = header.replace(/"/g, '""');
+                return `"${escaped}"`;
+            }).join(';');
+
+            const dataRows = data.map(row => {
+                return headers.map(header => {
+                    let value = row[header];
+
+                    if (value === null || value === undefined) {
+                        return '""';
+                    }
+
+                    value = value.toString();
+
+                    if (value.includes('"') || value.includes(';') || value.includes('\n')) {
+                        value = `"${value.replace(/"/g, '""')}"`;
+                    } else if (value === '') {
+                        value = '""';
+                    }
+
+                    return value;
+                }).join(';');
+            });
+
+            const BOM = '\uFEFF';
+
+            return BOM + headerRow + '\r\n' + dataRows.join('\r\n');
+        }
+
+        function downloadCSV(csvContent, fileName) {
+            const blob = new Blob([csvContent], {
+                type: 'text/csv;charset=utf-8'
+            });
+
+            if (navigator.msSaveBlob) {
+                navigator.msSaveBlob(blob, fileName);
+                return;
+            }
+
+            const link = document.createElement('a');
+
+            const url = window.URL.createObjectURL(blob);
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function formatColumnHeader(header) {
+            return header
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/_/g, ' ')
+                .replace(/^./, str => str.toUpperCase())
+                .trim();
+        }
+
+        const BASE_URL = 'https://population-reports-bhehbbbsd5fdche9.ukwest-01.azurewebsites.net/';
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function initializeEventListeners() {
+            const themeToggleBtn = document.querySelector('.theme-toggle');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', toggleTheme);
+            }
+
+            const reportTypeSelect = document.getElementById('reportType');
+            const scopeSelect = document.getElementById('scope');
+            const generateReportBtn = document.getElementById('generateReport');
+            const generateFilteredReportBtn = document.getElementById('generateFilteredReport');
+
+            if (reportTypeSelect) {
+                reportTypeSelect.addEventListener('change', handleReportTypeChange);
+            }
+            if (scopeSelect) {
+                scopeSelect.addEventListener('change', handleScopeChange);
+            }
+            if (generateReportBtn) {
+                generateReportBtn.addEventListener('click', generateReport);
+            }
+            if (generateFilteredReportBtn) {
+                generateFilteredReportBtn.addEventListener('click', generateFilteredPopulationReport);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+
+            initializeEventListeners();
+        });
+
         const reportTypeSelect = document.getElementById('reportType');
         const subOptions = document.getElementById('subOptions');
         const scopeSelect = document.getElementById('scope');
@@ -83,25 +345,112 @@
         const generateReportBtn = document.getElementById('generateReport');
         const tableContainer = document.getElementById('tableContainer');
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            reportTypeSelect.addEventListener('change', handleReportTypeChange);
-            scopeSelect.addEventListener('change', handleScopeChange);
-            generateReportBtn.addEventListener('click', generateReport);
-        });
-
-        // Handle report type selection
         function handleReportTypeChange(event) {
             const selectedType = event.target.value;
-            if (selectedType) {
-                subOptions.classList.remove('hidden');
-                updateScopeOptions(selectedType);
+            const filteredOptions = document.getElementById('filteredOptions');
+            const regularOptions = document.getElementById('subOptions');
+
+            if (selectedType === 'population-filtered') {
+                filteredOptions.classList.remove('hidden');
+                regularOptions.classList.add('hidden');
+                updateFilteredScopeOptions();
+                // Clear fields
+                if (paramValueInput) paramValueInput.value = '';
+                if (limitInput) limitInput.value = '';
             } else {
-                subOptions.classList.add('hidden');
+                filteredOptions.classList.add('hidden');
+                regularOptions.classList.remove('hidden');
+                updateScopeOptions(selectedType);
             }
         }
 
-        // Handle scope selection
+        //
+        function updateFilteredScopeOptions() {
+            const scopeSelect = document.getElementById('filteredScope');
+            scopeSelect.innerHTML = '';
+
+            const options = ['continent', 'region', 'country'];
+
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+                scopeSelect.appendChild(optionElement);
+            });
+        }
+
+        //
+        function generateFilteredPopulationReport() {
+            const scope = document.getElementById('filteredScope').value;
+            const url = `${BASE_URL}/population/${scope}/filtered`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => displayFilteredResults(data, scope))
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    tableContainer.innerHTML = '<p class="text-red-500">Error fetching data</p>';
+                });
+        }
+
+        //
+        function displayFilteredResults(data, scope) {
+            if (!data || data.length === 0) {
+                tableContainer.innerHTML = '<p>No data available</p>';
+                return;
+            }
+
+            const scopeTitle = scope.charAt(0).toUpperCase() + scope.slice(1);
+            const resultsHTML = `
+                <div class="results-header">
+                    <h3>Population Report by ${scopeTitle} (${data.length} entries)</h3>
+                    <button id="exportButton" class="export-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Export CSV
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>${scopeTitle}</th>
+                            <th>Total Population</th>
+                            <th>City Population</th>
+                            <th>City Population %</th>
+                            <th>Rural Population</th>
+                            <th>Rural Population %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(row => `
+                            <tr>
+                                <td>${row[scope]}</td>
+                                <td>${row.totalPopulation?.toLocaleString() ?? 'N/A'}</td>
+                                <td>${row.cityPopulation?.toLocaleString() ?? 'N/A'}</td>
+                                <td>${row.cityPercentage ?? 'N/A'}</td>
+                                <td>${row.ruralPopulation?.toLocaleString() ?? 'N/A'}</td>
+                                <td>${row.ruralPercentage ?? 'N/A'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            tableContainer.innerHTML = resultsHTML;
+
+            const exportButton = document.getElementById('exportButton');
+            if (exportButton) {
+                exportButton.addEventListener('click', () => handleExport(data));
+            }
+        }
+
         function handleScopeChange(event) {
             const scope = event.target.value;
             if (scope === 'world') {
@@ -112,12 +461,11 @@
             }
         }
 
-        // Update available scopes based on report type
         function updateScopeOptions(reportType) {
-            scopeSelect.innerHTML = ''; // Clear existing options
-            
+            scopeSelect.innerHTML = '';
+
             let options = [];
-            switch(reportType) {
+            switch (reportType) {
                 case 'capitals':
                     options = ['world', 'continent', 'region'];
                     break;
@@ -143,16 +491,22 @@
             });
         }
 
-        // Generate the report
         function generateReport() {
             const reportType = reportTypeSelect.value;
+
+            //
+            if (reportType === 'population-filtered') {
+                generateFilteredPopulationReport();
+                return;
+            }
+
             const scope = scopeSelect.value;
             const paramValue = paramValueInput.value;
             const limit = limitInput.value;
 
             let url = BASE_URL;
 
-            switch(reportType) {
+            switch (reportType) {
                 case 'capitals':
                     url += `/cities/capital/${scope}`;
                     break;
@@ -174,7 +528,6 @@
                     break;
             }
 
-            // Add parameters if needed
             if (scope !== 'world' && reportType !== 'language') {
                 url += `?${scope}=${paramValue}`;
                 if (limit) {
@@ -184,7 +537,6 @@
                 url += `?limit=${limit}`;
             }
 
-            // Make API call
             fetch(url)
                 .then(response => {
                     if (!response.ok) {
@@ -199,7 +551,42 @@
                 });
         }
 
-        // Display results in a table
+        function handleExport(data) {
+            if (!data || data.length === 0) {
+                showNotification('No data to export', 'error');
+                return;
+            }
+
+            const reportType = document.getElementById('reportType').value;
+            const scope = reportType === 'population-filtered'
+                ? document.getElementById('filteredScope').value
+                : document.getElementById('scope').value;
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+            const fileName = `${reportType}-${scope}-${timestamp}.csv`;
+
+            try {
+                const formattedData = data.map(item => {
+                    const formattedItem = {};
+                    for (const [key, value] of Object.entries(item)) {
+                        if (typeof value === 'number') {
+                            formattedItem[key] = value.toLocaleString();
+                        } else {
+                            formattedItem[key] = value;
+                        }
+                    }
+                    return formattedItem;
+                });
+
+                const csvContent = convertToCSV(formattedData);
+                downloadCSV(csvContent, fileName);
+
+                showNotification('Data exported successfully!');
+            } catch (error) {
+                console.error('Export error:', error);
+                showNotification('Error exporting data', 'error');
+            }
+        }
+
         function displayResults(data) {
             if (!data || data.length === 0) {
                 tableContainer.innerHTML = '<p>No data available</p>';
@@ -207,32 +594,66 @@
             }
 
             const headers = Object.keys(data[0]);
-            
-            const tableHTML = `
+
+            const resultsHTML = `
+                <div class="results-header">
+                    <h3>Results (${data.length} entries)</h3>
+                    <button id="exportButton" class="export-button" ${data.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Export CSV
+                    </button>
+                </div>
                 <table>
                     <thead>
                         <tr>
-                            ${headers.map(header => 
-                                `<th>${formatHeader(header)}</th>`
-                            ).join('')}
+                            ${headers.map(header =>
+                `<th>${formatColumnHeader(header)}</th>`
+            ).join('')}
                         </tr>
                     </thead>
                     <tbody>
                         ${data.map(row => `
                             <tr>
-                                ${headers.map(header => 
-                                    `<td>${row[header] ?? 'N/A'}</td>`
-                                ).join('')}
+                                ${headers.map(header => {
+                const value = row[header];
+
+                const displayValue = typeof value === 'number'
+                    ? value.toLocaleString()
+                    : (value ?? 'N/A');
+                return `<td>${displayValue}</td>`;
+            }).join('')}
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
             `;
 
-            tableContainer.innerHTML = tableHTML;
+            tableContainer.innerHTML = resultsHTML;
+
+            const exportButton = document.getElementById('exportButton');
+            if (exportButton) {
+                exportButton.addEventListener('click', () => handleExport(data));
+            }
         }
 
-        // Format header text
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
         function formatHeader(header) {
             return header
                 .split(/(?=[A-Z])/)
@@ -242,116 +663,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Countries by Population</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>World Countries by Population</h1>
-        <table id="countriesTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Population</th>
-                </tr>
-            </thead>
-            <tbody id="countriesTableBody">
-            </tbody>
-        </table>
-    </div>
-
-    <script>
-        // Функция для форматирования числа с разделителями
-        function formatNumber(num) {
-            return num.toLocaleString();
-        }
-
-        // Функция для загрузки данных
-        async function loadCountries() {
-            try {
-                const response = await fetch('http://localhost:8080/countries/world');
-                const data = await response.json();
-                
-                const tableBody = document.getElementById('countriesTableBody');
-                tableBody.innerHTML = ''; // Очищаем текущее содержимое
-
-                // Добавляем каждую страну в таблицу
-                data.forEach(country => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${country.name}</td>
-                        <td>${formatNumber(country.population)}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Error loading data:', error);
-                alert('Error loading data. Please check if the server is running.');
-            }
-        }
-
-        // Загружаем данные при загрузке страницы
-        window.addEventListener('load', loadCountries);
-    </script>
-</body>
-</html> -->
-

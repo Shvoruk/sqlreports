@@ -4,7 +4,7 @@ import org.springframework.data.relational.core.mapping.Column;
 
 import java.math.BigDecimal;
 
-public class Continent {
+public class Continent { 
 
     private String continent;
     private BigDecimal totalPopulation;

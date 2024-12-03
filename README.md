@@ -67,6 +67,8 @@ The system is available for use at:
 | 40666960             | 35            | 35            | 35            | 35            |
 | Total                | 100           | 100           | 100           | 100           |
 
+---
+
 ### **Setup**
 
 1. **Clone the Repository**:
@@ -105,3 +107,4 @@ Contributions are welcome! To add a new report or improve existing scripts:
 ---
 
 ## **Contact**
+For any questions or feedback, please create an issue in the repository.

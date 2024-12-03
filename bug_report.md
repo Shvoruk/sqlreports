@@ -31,5 +31,5 @@ If applicable, please fill out the smartphone information that you have experien
 - OS: [ IOS 18, Android 13 ] 
 - Browser: [ Google Chrome, Safari, Microsoft Browser ] 
 
-##Additional information
+## Additional information
 If there is any additional information you would like to present that can help us with neutralising this bug please do not hesitate to include it.

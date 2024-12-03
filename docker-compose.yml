@@ -3,6 +3,7 @@ services:
 
   app:
     build: .
+    image: oleksiicr.azurecr.io/sql_reports:latest
     container_name: sql_reports
     environment:
       MYSQL_URL: jdbc:mysql://db:3306/world
@@ -18,6 +19,7 @@ services:
 
   db:
     build: db/.
+    image: oleksiicr.azurecr.io/world_db:latest
     container_name: world_db
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword

@@ -21,15 +21,15 @@ If you have taken screenshots of the bug, please attatch them all so we can furt
 
 ## Desktop information
 If applicable, please fill out the desktop information that you have experienced the bug on
-- OS: [ Windows, Linux, MacOS ]
-- Browser: [ Chrome, Firefox, OperaGX, Safari ]
-- Version: [ Win11, Win10, IOS 18 ]
+- OS: e.g [ Windows, Linux, MacOS ]
+- Browser: e.g [ Chrome, Firefox, OperaGX, Safari ]
+- Version: e.g [ Win11, Win10, IOS 18 ]
 
 ## Smartphone information
 If applicable, please fill out the smartphone information that you have experienced the bug on
-- Device: [ iPhone 15, Google Pixel 7 ] 
-- OS: [ IOS 18, Android 13 ] 
-- Browser: [ Google Chrome, Safari, Microsoft Browser ] 
+- Device: e.g [ iPhone 15, Google Pixel 7 ] 
+- OS: e.g [ IOS 18, Android 13 ] 
+- Browser: e.g [ Google Chrome, Safari, Microsoft Browser ] 
 
 ## Additional information
 If there is any additional information you would like to present that can help us with neutralising this bug please do not hesitate to include it.

@@ -24,10 +24,7 @@ jobs:
       - name: Run Unit Tests
         run: mvn clean test -Dspring.profiles.active=test
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+
 
   integration-tests:
     name: Integration Tests with MySQL
@@ -50,8 +47,5 @@ jobs:
       - name: Run Integration Tests
         run: mvn clean verify -Dspring.profiles.active=integration
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+
 

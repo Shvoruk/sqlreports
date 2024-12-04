@@ -48,6 +48,7 @@ jobs:
   build:
     name: Build Run in Docker and Deploy Release
     runs-on: ubuntu-20.04
+    needs: [unit-tests, integration-tests]
     steps:
       - name: Checkout
         uses: actions/checkout@v2

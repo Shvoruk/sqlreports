@@ -1,4 +1,4 @@
-name: workflow for master branch
+name: workflow for develop branch
 
 on:
   push:
@@ -24,8 +24,6 @@ jobs:
       - name: Run Unit Tests
         run: mvn clean test -Dspring.profiles.active=test
 
-
-
   integration-tests:
     name: Integration Tests with MySQL
     runs-on: ubuntu-20.04
@@ -47,5 +45,29 @@ jobs:
       - name: Run Integration Tests
         run: mvn clean verify -Dspring.profiles.active=integration
 
+  build:
+    name: Build Run in Docker and Deploy Release
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Package and Run docker compose
+        run: |
+          mvn package -DskipTests
+          docker compose up --abort-on-container-exit
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: "latest"
+          files: |
+            ./target/*.jar
 
 
